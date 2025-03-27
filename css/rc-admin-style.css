@@ -1,0 +1,197 @@
+/* ===========================================
+   rc-admin-style.css
+   طراحی مدرن با تم سبز لجنی برای بخش تنظیمات افزونه ردی کمپین
+   =========================================== */
+
+/* تعریف متغیرهای اصلی */
+:root {
+  --primary-color: #27ae60;       /* سبز لجنی */
+  --secondary-color: #2ecc71;     /* سبز روشن‌تر */
+  --border-color: #27ae60;
+  --bg-color: #ffffff;
+  --shadow-color: rgba(39, 174, 96, 0.3);
+  --font-family: 'Poppins', sans-serif;
+}
+
+/* بارگذاری فونت از گوگل */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* تنظیمات کلی محیط اصلی */
+.toplevel_page_rc-campaign-settings .wrap {
+    font-family: var(--font-family);
+    width: 100%;
+    max-width: none;
+    margin: 30px auto;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 8px 20px var(--shadow-color);
+    transition: all 0.3s ease;
+}
+
+/* استایل هدر اصلی */
+.toplevel_page_rc-campaign-settings .wrap h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--secondary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* استایل تب‌های ناوبری */
+.toplevel_page_rc-campaign-settings .nav-tab-wrapper {
+    border-bottom: 1px solid var(--primary-color);
+    margin-bottom: 25px;
+}
+
+.toplevel_page_rc-campaign-settings .nav-tab {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 14px;
+    margin-right: 5px;
+    padding: 10px 15px;
+}
+
+.toplevel_page_rc-campaign-settings .nav-tab-active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+/* استایل جدول فرم تنظیمات */
+.toplevel_page_rc-campaign-settings .wrap table.form-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.toplevel_page_rc-campaign-settings .wrap table.form-table th,
+.toplevel_page_rc-campaign-settings .wrap table.form-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.toplevel_page_rc-campaign-settings .wrap table.form-table th {
+    font-weight: 600;
+    color: #444;
+    width: 35%;
+}
+
+.toplevel_page_rc-campaign-settings .wrap table.form-table td {
+    color: #333;
+}
+
+/* فیلدهای ورودی و تکست اریا (تمام عرض) */
+.toplevel_page_rc-campaign-settings .wrap input[type="text"],
+.toplevel_page_rc-campaign-settings .wrap input[type="url"],
+.toplevel_page_rc-campaign-settings .wrap input[type="date"],
+.toplevel_page_rc-campaign-settings .wrap textarea {
+    width: 70%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    background: #f9f9f9;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.toplevel_page_rc-campaign-settings .wrap input[type="text"]:focus,
+.toplevel_page_rc-campaign-settings .wrap input[type="url"]:focus,
+.toplevel_page_rc-campaign-settings .wrap input[type="date"]:focus,
+.toplevel_page_rc-campaign-settings .wrap textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(39, 174, 96, 0.2);
+    outline: none;
+}
+
+/* دکمه‌ها با گرادیانت سبز لجنی */
+.toplevel_page_rc-campaign-settings .wrap .button,
+.toplevel_page_rc-campaign-settings .wrap .button-primary {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    color: #fff !important;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.toplevel_page_rc-campaign-settings .wrap .button:hover,
+.toplevel_page_rc-campaign-settings .wrap .button-primary:hover {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    transform: translateY(-2px);
+}
+
+/* بخش آپلود تصویر */
+.toplevel_page_rc-campaign-settings .rc-media-uploader-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.toplevel_page_rc-campaign-settings .rc-media-preview img {
+    width: 100%;
+    max-width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* استایل توضیحات فیلدها */
+.toplevel_page_rc-campaign-settings .description {
+    font-size: 13px;
+    color: #777;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* تنظیمات بخش نتیجه UTM */
+.toplevel_page_rc-campaign-settings .utm-result-container {
+    margin-top: 10px;
+}
+
+.toplevel_page_rc-campaign-settings .utm-result-container textarea {
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: monospace;
+    margin-bottom: 10px;
+}
+
+.toplevel_page_rc-campaign-settings .utm-result-container button {
+    margin-right: 10px;
+}
+
+/* ریسپانسیو */
+@media (max-width: 782px) {
+    .toplevel_page_rc-campaign-settings .wrap {
+        padding: 20px;
+    }
+    
+    .toplevel_page_rc-campaign-settings .wrap input[type="text"],
+    .toplevel_page_rc-campaign-settings .wrap input[type="url"],
+    .toplevel_page_rc-campaign-settings .wrap input[type="date"],
+    .toplevel_page_rc-campaign-settings .wrap textarea {
+        width: 100%;
+    }
+    
+    .toplevel_page_rc-campaign-settings .wrap table.form-table th {
+        width: 100%;
+        display: block;
+        padding-bottom: 0;
+    }
+    
+    .toplevel_page_rc-campaign-settings .wrap table.form-table td {
+        width: 100%;
+        display: block;
+    }
+}
