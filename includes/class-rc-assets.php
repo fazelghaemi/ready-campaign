@@ -49,6 +49,9 @@ class RC_Assets {
             );
             wp_enqueue_script(
                 'rc-media-uploader',
-                RC_PLUGIN_URL . 'admin/js/rc-media-uploader.js', // مسیر جدید
+                RC_PLUGIN_URL . 'admin/js/rc-media-uploader.js',
                 array( 'jquery' ),
-                RC_
+                RC_VERSION, // <<<<<<< اضافه کردن ثابت نسخه
+                true        // <<<<<<< اضافه کردن پارامETER برای بارگذاری در فوتر
+            );
+?>
