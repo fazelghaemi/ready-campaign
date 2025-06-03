@@ -183,11 +183,16 @@
     to { transform: scale(0.5); opacity: 0; }
 }
 
-/* کلاس‌های نمونه برای اعمال انیمیشن (این کلاس‌ها توسط JS به صورت داینامیک استفاده می‌شوند) */
-/* مثال: $container.css('animation', animationName + ' 0.7s ease forwards'); */
-/* نیازی به تعریف کلاس‌های مجزا برای هر انیمیشن در CSS نیست اگر JS مستقیماً نام انیمیشن را تنظیم می‌کند. */
-/* اما اگر بخواهید از کلاس استفاده کنید:
-.rc-animate-fadeIn { animation-name: fadeIn; animation-duration: 0.7s; animation-fill-mode: forwards; }
-.rc-animate-slideInFromBottom { animation-name: slideInFromBottom; animation-duration: 0.7s; animation-fill-mode: forwards; }
-... و غیره
-*/
+.rc-banner-container[data-device-target="desktop_only"] { /* استایل‌های پیش‌فرض */ }
+.rc-banner-container[data-device-target="mobile_only"] { /* استایل‌های پیش‌فرض */ }
+
+@media (max-width: 768px) { /* نقطه شکست شما */
+    .rc-banner-container[data-device-target="desktop_only"] {
+        display: none !important;
+    }
+}
+@media (min-width: 769px) { /* نقطه شکست شما */
+    .rc-banner-container[data-device-target="mobile_only"] {
+        display: none !important;
+    }
+}
