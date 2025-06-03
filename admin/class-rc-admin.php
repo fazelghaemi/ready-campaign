@@ -19,13 +19,13 @@ class RC_Admin {
 
     public function add_admin_menu() {
         add_menu_page(
-            __( 'ردی کمپین', 'ready-campaign' ),
-            __( 'ردی کمپین', 'ready-campaign' ),
-            'manage_options',
-            'rc-main-settings', // Slug صفحه اصلی
-            array( $this, 'render_main_settings_page' ),
-            'dashicons-megaphone', // آیکون فعلی شما
-            90
+            __( 'ردی کمپین', 'ready-campaign' ),          // عنوان صفحه
+            __( 'ردی کمپین', 'ready-campaign' ),          // عنوان منو
+            'manage_options',                           // سطح دسترسی
+            'rc-main-settings',                         // اسلاگ (slug) منو - صفحه اصلی تنظیمات شما
+            array( $this, 'render_main_settings_page' ), // تابع برای نمایش محتوای صفحه
+            RC_PLUGIN_URL . 'assets/ready-campaign-banner.png', // <-- *** این خط تغییر می‌کند *** آدرس آیکون شما
+            90                                          // موقعیت منو
         );
 
         // زیر منو برای UTM Builder (اگر بخواهید جدا باشد یا در تب بماند)
