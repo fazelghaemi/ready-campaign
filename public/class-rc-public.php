@@ -1,169 +1,175 @@
 <?php
+// فایل: public/class-rc-public.php
+
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+    exit; // Exit if accessed directly.
 }
 
 class RC_Public {
 
     public function __construct() {
-        // هوک برای نمایش بنرها (می‌تواند wp_footer یا جای دیگری باشد)
-        add_action( 'wp_footer', array( $this, 'maybe_display_banners' ) );
+        add_action( 'wp_footer', array( $this, 'maybe_display_banners' ), 999 ); // اولویت بالا برای اطمینان از اجرای دیرهنگام
     }
 
+    /**
+     * بررسی و نمایش بنرهای واجد شرایط.
+     */
     public function maybe_display_banners() {
-        // 1. دریافت تمام بنرهای "فعال" از CPT 'rc_banner'
         $args = array(
-            'post_type' => 'rc_banner',
-            'post_status' => 'publish', // یا هر وضعیتی که برای بنرهای فعال در نظر می‌گیرید
+            'post_type'      => 'rc_banner',
+            'post_status'    => 'publish',
             'posts_per_page' => -1, // دریافت همه بنرها برای بررسی شرایط
-            'meta_query' => array(
+            'meta_query'     => array(
                 array(
-                    'key' => '_rc_banner_enabled', // یک متادیتا برای فعال/غیرفعال بودن هر بنر
-                    'value' => '1',
-                    'compare' => '='
-                )
-            )
+                    'key'     => '_rc_banner_enabled', // متادیتا برای فعال/غیرفعال بودن
+                    'value'   => '1',
+                    'compare' => '=',
+                ),
+            ),
         );
-        $active_banners = get_posts( $args );
+        $active_banners_query = new WP_Query( $args );
 
-        if ( empty( $active_banners ) ) {
+        if ( ! $active_banners_query->have_posts() ) {
             return; // هیچ بنر فعالی وجود ندارد
         }
 
         $banners_to_display = array();
 
-        foreach ( $active_banners as $banner_post ) {
-            // 2. برای هر بنر، شرایط نمایش آن را بررسی کنید
-            if ( $this->check_banner_conditions( $banner_post->ID ) ) {
-                $banners_to_display[] = $banner_post;
+        while ( $active_banners_query->have_posts() ) {
+            $active_banners_query->the_post();
+            $banner_id = get_the_ID();
+            if ( $this->check_banner_conditions( $banner_id ) ) {
+                // اگر نیاز به مرتب‌سازی یا منطق A/B تست دارید، می‌توانید آبجکت پست کامل را اضافه کنید
+                // یا فقط اطلاعات لازم برای رندر را استخراج کنید.
+                $banners_to_display[] = get_post( $banner_id );
             }
         }
+        wp_reset_postdata(); // بازنشانی کوئری اصلی وردپرس
 
         if ( empty( $banners_to_display ) ) {
             return; // هیچ بنری شرایط نمایش را ندارد
         }
 
-        // 3. اگر چندین بنر شرایط نمایش برای یک موقعیت را دارند، منطق A/B تست یا نمایش چرخشی را پیاده‌سازی کنید.
-        // فعلا ساده‌ترین حالت: اولین بنری که شرایط را دارد یا همه بنرهایی که شرایط را دارند (اگر طراحی اجازه دهد).
-        // برای سادگی، فرض می‌کنیم هر بنر موقعیت منحصر به فرد خود را دارد یا در JS مدیریت می‌شود.
+        // در اینجا می‌توانید منطق بیشتری برای انتخاب بنرها پیاده‌سازی کنید
+        // مثلاً اگر چندین بنر برای یک موقعیت واجد شرایط هستند، یکی را به صورت تصادفی انتخاب کنید
+        // یا بر اساس اولویت/وزن. فعلاً همه بنرهای واجد شرایط را رندر می‌کنیم.
 
-        // 4. HTML بنرها را تولید و نمایش دهید.
-        foreach ( $banners_to_display as $banner_to_display ) {
-            $this->render_banner( $banner_to_display );
+        foreach ( $banners_to_display as $banner_to_render ) {
+            $this->render_banner( $banner_to_render );
         }
     }
 
     /**
      * بررسی شرایط نمایش برای یک بنر خاص.
-     * @param int $banner_id شناسه پست بنر
+     * @param int $banner_id شناسه پست بنر.
      * @return bool True اگر بنر باید نمایش داده شود، در غیر این صورت False.
      */
     private function check_banner_conditions( $banner_id ) {
-        // دریافت متادیتای بنر
-        $is_enabled = get_post_meta( $banner_id, '_rc_banner_enabled', true );
-        if ( ! $is_enabled ) {
+        // متادیتای '_rc_banner_enabled' قبلاً در کوئری اصلی چک شده است.
+
+        // الف. بررسی تاریخ شروع و پایان
+        $start_date = get_post_meta( $banner_id, '_rc_banner_start_date', true );
+        $end_date   = get_post_meta( $banner_id, '_rc_banner_end_date', true );
+        $today      = date( 'Y-m-d' );
+
+        if ( ! empty( $start_date ) && $today < $start_date ) {
+            return false;
+        }
+        if ( ! empty( $end_date ) && $today > $end_date ) {
             return false;
         }
 
-        // الف. بررسی تاریخ شروع و پایان (مشابه کد فعلی شما اما با get_post_meta)
-        $start_date_meta = get_post_meta( $banner_id, '_rc_banner_start_date', true );
-        $end_date_meta = get_post_meta( $banner_id, '_rc_banner_end_date', true );
-        $today = date( 'Y-m-d' );
-
-        if ( ! empty( $start_date_meta ) && $today < $start_date_meta ) {
-            return false;
-        }
-        if ( ! empty( $end_date_meta ) && $today > $end_date_meta ) {
-            return false;
-        }
-
-        // ب. بررسی نوع دستگاه (دسکتاپ/موبایل)
-        // این متادیتا باید در متاباکس CPT بنر ذخیره شود (مثلاً _rc_banner_device_target)
-        // مقادیر می‌تواند 'all', 'desktop_only', 'mobile_only' باشد.
+        // ب. بررسی هدف‌گذاری دستگاه
         $device_target = get_post_meta( $banner_id, '_rc_banner_device_target', true );
-        if ( empty( $device_target ) ) $device_target = 'all'; // پیش‌فرض
+        $device_target = ! empty( $device_target ) ? $device_target : 'all'; // پیش‌فرض 'all'
+        $is_mobile     = wp_is_mobile();
 
-        $is_mobile = wp_is_mobile(); // تابع وردپرسی برای تشخیص موبایل
-
-        if ( $device_target === 'desktop_only' && $is_mobile ) {
-            return false;
-        }
-        if ( $device_target === 'mobile_only' && ! $is_mobile ) {
+        if ( ( $device_target === 'desktop_only' && $is_mobile ) ||
+             ( $device_target === 'mobile_only' && ! $is_mobile ) ) {
             return false;
         }
 
-        // ج. بررسی هدف‌گذاری صفحات (URL ها، پست تایپ‌ها، دسته‌بندی‌ها و...)
-        // این بخش پیچیده‌تر است و نیاز به ذخیره قوانین هدف‌گذاری در متادیتای بنر دارد.
-        // به عنوان مثال:
-        // $display_on_all_pages = get_post_meta( $banner_id, '_rc_banner_display_all', true );
-        // $specific_pages = get_post_meta( $banner_id, '_rc_banner_specific_pages', true ); // آرایه‌ای از ID صفحات
-        // if ( !$display_on_all_pages && !empty($specific_pages) && !is_singular($specific_pages) ) {
-        // return false;
+        // ج. بررسی هدف‌گذاری صفحات خاص (این بخش برای پیاده‌سازی پیشرفته‌تر است)
+        // $target_pages = get_post_meta( $banner_id, '_rc_banner_target_pages', true ); // آرایه‌ای از IDها یا شرایط
+        // if ( ! empty( $target_pages ) ) {
+        //     global $post; // آبجکت پست فعلی در صفحه
+        //     $current_page_id = isset($post->ID) ? $post->ID : 0;
+        //     $is_front = is_front_page();
+        //     $is_blog = is_home();
+        //     // ... منطق بررسی اینکه آیا صفحه فعلی در $target_pages هست یا خیر ...
+        //     // if ( ! $condition_met ) return false;
         // }
-        // ... (این بخش نیاز به طراحی دقیق‌تر دارد)
 
-        // د. سایر شرایط (نقش کاربر، تعداد نمایش و ...)
+        // د. سایر شرایط (نقش کاربر، تعداد نمایش به کاربر و ...) در آینده قابل افزودن است.
 
         return true; // اگر تمام شرایط برقرار باشند
     }
 
     /**
      * رندر کردن HTML یک بنر.
-     * @param WP_Post $banner_post آبجکت پست بنر
+     * @param WP_Post $banner_post آبجکت پست بنر.
      */
     private function render_banner( $banner_post ) {
         $banner_id = $banner_post->ID;
 
         // دریافت تمام متادیتای لازم برای نمایش بنر
-        $image_url_desktop = get_post_meta( $banner_id, '_rc_banner_image_desktop', true ); // URL تصویر دسکتاپ
-        $image_url_mobile = get_post_meta( $banner_id, '_rc_banner_image_mobile', true ); // URL تصویر موبایل
-        $link_url = get_post_meta( $banner_id, '_rc_banner_link_url', true );
-        $position = get_post_meta( $banner_id, '_rc_banner_position', true ); // مثلا 'bottom-right', 'top-left', 'center'
-        $width_desktop = get_post_meta( $banner_id, '_rc_banner_width_desktop', true );
-        $width_mobile = get_post_meta( $banner_id, '_rc_banner_width_mobile', true );
-        $margin = get_post_meta( $banner_id, '_rc_banner_margin', true ); // فاصله از لبه‌ها
-        $radius = get_post_meta( $banner_id, '_rc_banner_radius', true );
-        $animation_in = get_post_meta( $banner_id, '_rc_banner_animation_in', true );
-        $animation_out = get_post_meta( $banner_id, '_rc_banner_animation_out', true );
-        $device_target = get_post_meta( $banner_id, '_rc_banner_device_target', true ); // برای کلاس CSS
+        $image_desktop     = get_post_meta( $banner_id, '_rc_banner_image_desktop', true );
+        $image_mobile      = get_post_meta( $banner_id, '_rc_banner_image_mobile', true );
+        $link_url          = get_post_meta( $banner_id, '_rc_banner_link_url', true );
+        $position          = get_post_meta( $banner_id, '_rc_banner_position', true ) ?: 'bottom-right';
+        $device_target     = get_post_meta( $banner_id, '_rc_banner_device_target', true ) ?: 'all';
+        $width_desktop     = get_post_meta( $banner_id, '_rc_banner_width_desktop', true ) ?: '350';
+        $width_mobile      = get_post_meta( $banner_id, '_rc_banner_width_mobile', true ) ?: '300';
+        $margin_vertical   = get_post_meta( $banner_id, '_rc_banner_margin_vertical', true ) ?: '20';
+        $margin_horizontal = get_post_meta( $banner_id, '_rc_banner_margin_horizontal', true ) ?: '20'; // اضافه شد
+        $radius            = get_post_meta( $banner_id, '_rc_banner_radius', true ) ?: '0';
+        $animation_in      = get_post_meta( $banner_id, '_rc_banner_animation_in', true ) ?: 'fadeIn';
+        $animation_out     = get_post_meta( $banner_id, '_rc_banner_animation_out', true ) ?: 'fadeOut';
 
-        // انتخاب تصویر مناسب بر اساس دستگاه (این منطق می‌تواند در JS هم باشد)
-        $image_to_use = ( wp_is_mobile() && !empty($image_url_mobile) ) ? $image_url_mobile : $image_url_desktop;
-        if ( empty($image_to_use) && wp_is_mobile() && !empty($image_url_desktop) ) $image_to_use = $image_url_desktop; // Fallback to desktop if mobile not set
-        if ( empty($image_to_use) && !wp_is_mobile() && !empty($image_url_mobile) ) $image_to_use = $image_url_mobile; // Fallback to mobile if desktop not set
+        // انتخاب تصویر مناسب بر اساس دستگاه
+        $image_to_use = ( wp_is_mobile() && !empty($image_mobile) ) ? $image_mobile : $image_desktop;
+        // اگر تصویر موبایل خالی بود و در حالت موبایل هستیم، از تصویر دسکتاپ استفاده کن (اگر وجود دارد)
+        if ( wp_is_mobile() && empty($image_to_use) && !empty($image_desktop) ) {
+            $image_to_use = $image_desktop;
+        }
+        // اگر تصویر دسکتاپ خالی بود و در حالت دسکتاپ هستیم، از تصویر موبایل استفاده کن (اگر وجود دارد و این منطق مطلوب است)
+        // معمولاً اگر تصویر اصلی (دسکتاپ) نباشد، کلاً نمایش داده نمی‌شود.
+        
+        if ( empty( $image_to_use ) ) {
+            return; // اگر هیچ تصویری برای نمایش وجود ندارد
+        }
 
-        if ( empty( $image_to_use ) ) return; // اگر هیچ تصویری برای نمایش وجود ندارد
-
-        // ساخت استایل‌های inline یا data attributes برای JS
-        // در کد فعلی شما، متغیرهای CSS (--desktop-width و ...) در rc-style.css استفاده شده‌اند.
-        // این رویکرد خوبی است. مقادیر را می‌توان از طریق data attributes به کانتینر بنر داد.
+        // ساخت data attributes برای استفاده توسط JavaScript
         $container_data_attrs = sprintf(
-            'data-id="rc-banner-%1$s" data-position="%2$s" data-desktop-width="%3$spx" data-mobile-width="%4$spx" data-margin="%5$spx" data-radius="%6$spx" data-anim-in="%7$s" data-anim-out="%8$s" data-device-target="%9$s"',
-            esc_attr( $banner_id ),
-            esc_attr( $position ?: 'bottom-right' ),
-            esc_attr( $width_desktop ?: '350' ),
-            esc_attr( $width_mobile ?: '300' ),
-            esc_attr( $margin ?: '20' ),
-            esc_attr( $radius ?: '0' ),
-            esc_attr( $animation_in ?: 'fadeIn' ),
-            esc_attr( $animation_out ?: 'fadeOut' ),
-            esc_attr( $device_target ?: 'all' )
+            'data-id="%1$s" data-position="%2$s" data-desktop-width="%3$s" data-mobile-width="%4$s" data-margin="%5$s" data-side-margin="%6$s" data-radius="%7$s" data-anim-in="%8$s" data-anim-out="%9$s" data-device-target="%10$s"',
+            esc_attr( 'rc-banner-' . $banner_id ), // ID منحصر به فرد برای هر کانتینر
+            esc_attr( $position ),
+            esc_attr( $width_desktop ),
+            esc_attr( $width_mobile ),
+            esc_attr( $margin_vertical ),
+            esc_attr( $margin_horizontal ), // اضافه شد
+            esc_attr( $radius ),
+            esc_attr( $animation_in ),
+            esc_attr( $animation_out ),
+            esc_attr( $device_target )
         );
 
-        // استفاده از یک فایل قالب برای رندر HTML (روش بهتر)
-        // include RC_PLUGIN_DIR . 'templates/single-banner.php';
-        // یا تولید HTML به صورت مستقیم:
+        $link_target = '_blank'; // یا از یک متادیتای دیگر برای کنترل target بخوانید
 
         ?>
         <div id="rc-banner-<?php echo esc_attr( $banner_id ); ?>" 
-             class="rc-banner-container <?php echo ($device_target === 'desktop_only') ? 'rc-desktop-only' : (($device_target === 'mobile_only') ? 'rc-mobile-only' : ''); ?>"
+             class="rc-banner-container" <?php /* کلاس‌های rc-desktop-only/rc-mobile-only دیگر اینجا لازم نیستند اگر JS نمایش را بر اساس data-device-target کنترل می‌کند یا CSS آن‌ها را دارد */ ?>
              <?php echo $container_data_attrs; ?>
-             style="display:none;" <?php // JS نمایش را مدیریت می‌کند ?>>
-            <div class="rc-banner-close">&times;</div>
-            <div class="rc-banner-content" style="border-radius: <?php echo esc_attr( $radius ?: '0' ); ?>px;">
-                <a href="<?php echo esc_url( $link_url ?: '#' ); ?>" target="_blank" rel="noopener noreferrer">
-                    <img src="<?php echo esc_url( $image_to_use ); ?>" alt="<?php esc_attr_e( 'بنر تبلیغاتی', 'ready-campaign' ); ?>" />
-                </a>
+             style="display:none;" <?php // JavaScript نمایش را مدیریت می‌کند ?>>
+            <div class="rc-banner-close" role="button" tabindex="0" aria-label="<?php esc_attr_e('بستن بنر', 'ready-campaign'); ?>">&times;</div>
+            <div class="rc-banner-content" style="border-radius: <?php echo esc_attr( $radius ); ?>px;">
+                <?php if ( !empty( $link_url ) ): ?>
+                    <a href="<?php echo esc_url( $link_url ); ?>" target="<?php echo esc_attr($link_target); ?>" rel="noopener noreferrer">
+                        <img src="<?php echo esc_url( $image_to_use ); ?>" alt="<?php echo esc_attr( $banner_post->post_title ); // استفاده از عنوان بنر به عنوان متن alt ?>" />
+                    </a>
+                <?php else: ?>
+                    <img src="<?php echo esc_url( $image_to_use ); ?>" alt="<?php echo esc_attr( $banner_post->post_title ); ?>" />
+                <?php endif; ?>
             </div>
         </div>
         <?php
