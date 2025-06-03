@@ -35,3 +35,11 @@
         ?>
     </form>
 </div>
+<div class="wrap rc-settings-wrap">
+    <h1>
+        <img src="<?php echo esc_url( RC_PLUGIN_URL . 'assets/ready-campaign-banner.png' ); ?>" 
+             alt="<?php esc_attr_e( 'آیکون ردی کمپین', 'ready-campaign' ); ?>" 
+             style="width: 32px; height: 32px; vertical-align: middle; margin-left: 8px;" />
+        <?php echo esc_html( get_admin_page_title() ); ?>
+    </h1>
+</div>
