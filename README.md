@@ -104,3 +104,37 @@
 لایسنس
 
 این افزونه تحت لایسنس GPL2 منتشر شده است.
+
+---
+
+## Ready Campaign (English Summary)
+
+**Plugin Purpose:**
+The "ردی کمپین" (Ready Campaign) plugin is a WordPress extension designed to empower website administrators with tools to create, manage, and display targeted promotional campaigns. Its primary goal is to facilitate the implementation of marketing initiatives directly within the WordPress environment.
+
+**Core Functionalities:**
+
+1.  **Banner Management:**
+    *   Allows creation and management of advertising banners through a custom post type (`rc_banner`).
+    *   Provides extensive options for each banner, including:
+        *   Separate images for desktop and mobile displays.
+        *   Target URLs for click-throughs.
+        *   Scheduling (start and end dates for display).
+        *   Device-specific display (all devices, desktop only, mobile only).
+        *   Customizable positioning on the screen (e.g., bottom-right, sticky-top).
+        *   Control over appearance (dimensions, margins, corner radius).
+        *   Entrance and exit animations for banners.
+
+2.  **UTM Link Generation:**
+    *   Includes a built-in utility in the admin area to construct URLs with UTM parameters (`utm_source`, `utm_medium`, `utm_campaign`, etc.). This helps in tracking the effectiveness of campaigns in analytics platforms.
+
+3.  **Frontend Display Engine:**
+    *   Dynamically displays active and relevant banners on the public-facing website.
+    *   Checks various conditions (active status, schedule, device type) before rendering a banner.
+    *   Relies on JavaScript for the final presentation, including animations and positioning.
+
+4.  **Organizational Features:**
+    *   Introduces a custom taxonomy (`rc_banner_group`) to categorize banners, allowing for better organization.
+    *   Provides a central admin menu ("ردی کمپین") for accessing plugin settings, banner management, and the UTM builder.
+
+The plugin aims to be a comprehensive solution for on-site banner advertising and campaign URL tracking for WordPress sites.
