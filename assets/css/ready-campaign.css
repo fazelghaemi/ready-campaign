@@ -6,9 +6,46 @@
 .rc-pos-bl{bottom:calc(var(--rc-oy,16px) + var(--rc-safe-bottom,0px)); left:calc(var(--rc-ox,16px) + var(--rc-safe-left,0px))}
 .rc-pos-center{top:50%; left:50%; transform:translate(-50%,-50%)}
 
-.rc-banner{position:fixed; z-index:999999; box-shadow:0 10px 25px rgba(0,0,0,.18); overflow:hidden; background:#fff; border:1px solid #e5e7eb}
-.rc-banner img{display:block; width:100%; height:auto}
-.rc-banner .rc-close{position:absolute; right:8px; top:6px; border:0; background:rgba(0,0,0,.55); color:#fff; width:26px; height:26px; line-height:24px; border-radius:50%; cursor:pointer}
+/* باکس بنر: شفاف، بدون بوردر و سایه؛ بستن بیرون کادر نیاز به overflow:visible دارد */
+.rc-banner{
+  position:fixed;
+  z-index:999999;
+  background:transparent;   /* شفاف */
+  border:none;              /* بدون بوردر */
+  box-shadow:none;          /* بدون سایه */
+  overflow:visible;         /* اجازه می‌دهد دکمه بستن از کادر بیرون زده باشد */
+}
+
+.rc-banner img{
+  display:block;
+  width:100%;
+  height:auto;
+  background:transparent !important; /* برای اطمینان از نبود بکگراند */
+}
+
+/* دکمه بستن: بیرون کادر و هاور قرمز با 50% شفافیت */
+.rc-banner .rc-close{
+  position:absolute;
+  right:-12px;  /* بیرون کادر */
+  top:-12px;    /* بیرون کادر */
+  border:0;
+  background:rgba(0,0,0,.55); /* حالت عادی */
+  color:#fff;
+  width:28px;
+  height:28px;
+  line-height:28px;
+  border-radius:50%;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.rc-banner .rc-close:hover,
+.rc-banner .rc-close:focus-visible{
+  background:rgba(255,0,0,.5); /* هاور قرمز با اپاسیتی 50% */
+  outline:none;
+}
 
 /* انیمیشن‌های ورود */
 @keyframes rc-fade-in{from{opacity:0}to{opacity:1}}

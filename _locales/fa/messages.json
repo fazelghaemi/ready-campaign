@@ -1,0 +1,18 @@
+{
+  "appName": {
+    "message": "کمپین آماده",
+    "description": "نام افزونه"
+  },
+  "appDescription": {
+    "message": "کمپین‌های پیامکی خود را به راحتی مدیریت کنید.",
+    "description": "توضیحات افزونه"
+  },
+  "readyMadeCampaigns": {
+    "message": "کمپین‌های آماده",
+    "description": "عنوان بخش کمپین‌های آماده"
+  },
+  "selectCampaign": {
+    "message": "انتخاب کمپین",
+    "description": "متن دکمه انتخاب"
+  }
+}
