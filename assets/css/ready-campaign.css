@@ -1,86 +1,131 @@
-/* ریشه برای Safe Areas سراسری */
-.rc-root{position:relative}
-.rc-pos-tr{top:calc(var(--rc-oy,16px) + var(--rc-safe-top,0px)); right:calc(var(--rc-ox,16px) + var(--rc-safe-right,0px))}
-.rc-pos-tl{top:calc(var(--rc-oy,16px) + var(--rc-safe-top,0px)); left:calc(var(--rc-ox,16px) + var(--rc-safe-left,0px))}
-.rc-pos-br{bottom:calc(var(--rc-oy,16px) + var(--rc-safe-bottom,0px)); right:calc(var(--rc-ox,16px) + var(--rc-safe-right,0px))}
-.rc-pos-bl{bottom:calc(var(--rc-oy,16px) + var(--rc-safe-bottom,0px)); left:calc(var(--rc-ox,16px) + var(--rc-safe-left,0px))}
-.rc-pos-center{top:50%; left:50%; transform:translate(-50%,-50%)}
+/* * Ready Campaign - Main Stylesheet
+ * Re-designed by Gemini for a modern, Google-like interface.
+ */
 
-/* باکس بنر: شفاف، بدون بوردر و سایه؛ بستن بیرون کادر نیاز به overflow:visible دارد */
-.rc-banner{
-  position:fixed;
-  z-index:999999;
-  background:transparent;   /* شفاف */
-  border:none;              /* بدون بوردر */
-  box-shadow:none;          /* بدون سایه */
-  overflow:visible;         /* اجازه می‌دهد دکمه بستن از کادر بیرون زده باشد */
+/* Main Wrapper */
+.wrap.ready-campaign {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f9f9f9; /* A slightly off-white background for the whole page */
 }
 
-.rc-banner img{
-  display:block;
-  width:100%;
-  height:auto;
-  background:transparent !important; /* برای اطمینان از نبود بکگراند */
+.ready-campaign-container {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0 24px 24px 24px;
+    margin-top: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
 }
 
-/* دکمه بستن: بیرون کادر و هاور قرمز با 50% شفافیت */
-.rc-banner .rc-close{
-  position:absolute;
-  right:-12px;  /* بیرون کادر */
-  top:-12px;    /* بیرون کادر */
-  border:0;
-  background:rgba(0,0,0,.55); /* حالت عادی */
-  color:#fff;
-  width:28px;
-  height:28px;
-  line-height:28px;
-  border-radius:50%;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
+/* Header */
+.ready-campaign .fs-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #202124;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    margin: 24px 0;
 }
 
-.rc-banner .rc-close:hover,
-.rc-banner .rc-close:focus-visible{
-  background:rgba(255,0,0,.5); /* هاور قرمز با اپاسیتی 50% */
-  outline:none;
+/* Tabs Navigation */
+.ready-campaign .nav-tab-wrapper {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 24px;
 }
 
-/* انیمیشن‌های ورود */
-@keyframes rc-fade-in{from{opacity:0}to{opacity:1}}
-@keyframes rc-slide-in{from{transform:translateY(20px)}to{transform:translateY(0)}}
-@keyframes rc-zoom-in{from{transform:scale(.9)}to{transform:scale(1)}}
-@keyframes rc-bounce-in{0%{transform:scale(.9)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+.ready-campaign .nav-tab {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    padding: 10px 4px;
+    margin-right: 20px;
+    color: #5f6368;
+    transition: all 0.2s ease-in-out;
+}
 
-.rc-in-fade{animation:rc-fade-in .35s ease-out both}
-.rc-in-slide{animation:rc-slide-in .4s ease-out both}
-.rc-in-zoom{animation:rc-zoom-in .3s ease-out both}
-.rc-in-bounce{animation:rc-bounce-in .45s ease-out both}
+.ready-campaign .nav-tab:hover {
+    border-bottom-color: #5f6368;
+}
 
-/* انیمیشن‌های خروج */
-@keyframes rc-fade-out{to{opacity:0}}
-@keyframes rc-slide-out{to{transform:translateY(20px); opacity:.0}}
-@keyframes rc-zoom-out{to{transform:scale(.9); opacity:.0}}
-@keyframes rc-bounce-out{20%{transform:scale(1.05)}100%{transform:scale(.9); opacity:0}}
+.ready-campaign .nav-tab-active,
+.ready-campaign .nav-tab-active:hover {
+    color: #00635D; /* Your brand color */
+    border-bottom-color: #00635D;
+    font-weight: 500;
+}
 
-.rc-out-fade-leave{animation:rc-fade-out .25s ease-in forwards}
-.rc-out-slide-leave{animation:rc-slide-out .3s ease-in forwards}
-.rc-out-zoom-leave{animation:rc-zoom-out .25s ease-in forwards}
-.rc-out-bounce-leave{animation:rc-bounce-out .35s ease-in forwards}
+/* Form Tables & General Settings */
+.ready-campaign form {
+    max-width: 700px;
+}
 
-/* UI مدرن/Curve در ادمین */
-.ui-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);margin-bottom:16px}
-.rc-h{margin:0 0 8px;font-size:16px;font-weight:600}
-.rc-preview-img{max-width:100%;height:auto;display:block;margin-bottom:8px;border:1px solid #e5e7eb;border-radius:12px}
-.rc-utm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.rc-utm-grid label{display:flex;flex-direction:column;gap:6px}
-.rc-utm-actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
-.rc-utm-apply{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
-.rc-analytics-filters label{margin-right:8px}
-.rc-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.kpi{background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:12px;text-align:center}
-.kpi-title{font-size:12px;color:#64748b}
-.kpi-value{font-size:20px;font-weight:700;color:#0f172a}
+.ready-campaign .form-table th {
+    font-weight: 500;
+    width: 200px;
+    padding: 15px 10px 15px 0;
+}
 
-@media (max-width: 782px){.rc-utm-grid{grid-template-columns:1fr}.rc-kpis{grid-template-columns:1fr}}
+.ready-campaign .form-table td {
+    padding: 10px 0;
+}
+
+.ready-campaign input[type="text"],
+.ready-campaign input[type="number"],
+.ready-campaign select {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    transition: all 0.2s ease;
+}
+
+.ready-campaign input[type="text"]:focus,
+.ready-campaign input[type="number"]:focus,
+.ready-campaign select:focus {
+    border-color: #00635D;
+    box-shadow: 0 0 0 1px #00635D;
+    outline: none;
+}
+
+.ready-campaign .description {
+    color: #5f6368;
+    font-style: normal;
+}
+
+/* Buttons */
+.ready-campaign .button-primary {
+    background: #00635D !important; /* Your brand color */
+    border-color: #004f4a !important;
+    color: #ffffff !important;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    height: auto;
+    line-height: normal;
+    border-radius: 4px;
+    text-shadow: none;
+    box-shadow: none;
+    transition: background-color 0.2s;
+}
+
+.ready-campaign .button-primary:hover {
+    background: #004f4a !important; /* Darker shade on hover */
+}
+
+/* Tables (e.g., campaign list) */
+.ready-campaign .wp-list-table {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+.ready-campaign .wp-list-table thead tr,
+.ready-campaign .wp-list-table tfoot tr {
+    background-color: #f5f5f5;
+}
+
+.ready-campaign .wp-list-table th,
+.ready-campaign .wp-list-table td {
+    padding: 12px;
+}
