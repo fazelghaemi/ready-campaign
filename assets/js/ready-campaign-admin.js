@@ -1,0 +1,65 @@
+(function($){
+  // Media uploader
+  $(document).on('click', '.rcp-media', function(e){
+    e.preventDefault();
+    var target = $(this).data('target');
+    var $wrap = $(this).closest('p');
+    var frame = wp.media({title:'انتخاب تصویر', button:{text:'استفاده از این تصویر'}, multiple:false});
+    frame.on('select', function(){
+      var att = frame.state().get('selection').first().toJSON();
+      $wrap.find('input[name="'+target+'"]').val(att.id);
+      $wrap.find('img').attr('src', att.url);
+      $('#rc_live_img').attr('src', att.url);
+    });
+    frame.open();
+  });
+
+  // UTM builder
+  function build(){
+    var base = $('#rc_base').val().trim();
+    if(!base) return '';
+    var url = new URL(base, window.location.origin);
+    var map = {
+      utm_source:  $('#rc_source').val().trim(),
+      utm_medium:  $('#rc_medium').val().trim(),
+      utm_campaign:$('#rc_campaign').val().trim(),
+      utm_id:      $('#rc_id').val().trim(),
+      utm_term:    $('#rc_term').val().trim(),
+      utm_content: $('#rc_content').val().trim()
+    };
+    Object.keys(map).forEach(function(k){ if(map[k]) url.searchParams.set(k, map[k]); });
+    return url.toString();
+  }
+  $('#rc_build').on('click', function(){ $('#rc_result').val(build()); });
+  $('#rc_copy').on('click', function(){
+    var $i = $('#rc_result'); $i[0].select(); document.execCommand('copy');
+    $(this).text('کپی شد ✓'); setTimeout(()=>$(this).text('کپی لینک'), 1200);
+  });
+  $('#rc_apply').on('click', function(){
+    var url = $('#rc_result').val().trim();
+    var id  = $('#rc_banner').val();
+    if(!url || !id){ alert('لینک و بنر را مشخص کنید'); return; }
+    $.post(RCAdmin.applyUrl, {nonce:RCAdmin.nonce, banner_id:id, url:url}, function(res){
+      alert(res && res.success ? 'لینک روی بنر اعمال شد' : 'خطا در اعمال لینک');
+    });
+  });
+
+  // Live Preview bindings
+  function updatePreview(){
+    var pos   = $('select[name="rc_position"]').val() || 'br';
+    var w     = $('input[name="rc_width"]').val() || '320px';
+    var ox    = $('input[name="rc_offset_x"]').val() || '16px';
+    var oy    = $('input[name="rc_offset_y"]').val() || '16px';
+    var rad   = $('input[name="rc_radius"]').val() || '12px';
+    var animI = $('select[name="rc_anim_in"]').val() || 'fade';
+
+    var $b = $('#rc_live_stage .rc-banner');
+    $b.removeClass(function(i,c){ return (c.match(/rc-pos-\S+/g)||[]).join(' '); })
+      .addClass('rc-pos-'+pos)
+      .removeClass(function(i,c){ return (c.match(/rc-in-\S+/g)||[]).join(' '); })
+      .addClass('rc-in-'+animI)
+      .attr('style','width:'+w+';border-radius:'+rad+';--rc-ox:'+ox+';--rc-oy:'+oy+';');
+  }
+  $(document).on('input change', 'select[name="rc_position"], input[name="rc_width"], input[name="rc_offset_x"], input[name="rc_offset_y"], input[name="rc_radius"], select[name="rc_anim_in"]', updatePreview);
+  $(updatePreview);
+})(jQuery);

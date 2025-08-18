@@ -1,0 +1,49 @@
+/* ریشه برای Safe Areas سراسری */
+.rc-root{position:relative}
+.rc-pos-tr{top:calc(var(--rc-oy,16px) + var(--rc-safe-top,0px)); right:calc(var(--rc-ox,16px) + var(--rc-safe-right,0px))}
+.rc-pos-tl{top:calc(var(--rc-oy,16px) + var(--rc-safe-top,0px)); left:calc(var(--rc-ox,16px) + var(--rc-safe-left,0px))}
+.rc-pos-br{bottom:calc(var(--rc-oy,16px) + var(--rc-safe-bottom,0px)); right:calc(var(--rc-ox,16px) + var(--rc-safe-right,0px))}
+.rc-pos-bl{bottom:calc(var(--rc-oy,16px) + var(--rc-safe-bottom,0px)); left:calc(var(--rc-ox,16px) + var(--rc-safe-left,0px))}
+.rc-pos-center{top:50%; left:50%; transform:translate(-50%,-50%)}
+
+.rc-banner{position:fixed; z-index:999999; box-shadow:0 10px 25px rgba(0,0,0,.18); overflow:hidden; background:#fff; border:1px solid #e5e7eb}
+.rc-banner img{display:block; width:100%; height:auto}
+.rc-banner .rc-close{position:absolute; right:8px; top:6px; border:0; background:rgba(0,0,0,.55); color:#fff; width:26px; height:26px; line-height:24px; border-radius:50%; cursor:pointer}
+
+/* انیمیشن‌های ورود */
+@keyframes rc-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes rc-slide-in{from{transform:translateY(20px)}to{transform:translateY(0)}}
+@keyframes rc-zoom-in{from{transform:scale(.9)}to{transform:scale(1)}}
+@keyframes rc-bounce-in{0%{transform:scale(.9)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+
+.rc-in-fade{animation:rc-fade-in .35s ease-out both}
+.rc-in-slide{animation:rc-slide-in .4s ease-out both}
+.rc-in-zoom{animation:rc-zoom-in .3s ease-out both}
+.rc-in-bounce{animation:rc-bounce-in .45s ease-out both}
+
+/* انیمیشن‌های خروج */
+@keyframes rc-fade-out{to{opacity:0}}
+@keyframes rc-slide-out{to{transform:translateY(20px); opacity:.0}}
+@keyframes rc-zoom-out{to{transform:scale(.9); opacity:.0}}
+@keyframes rc-bounce-out{20%{transform:scale(1.05)}100%{transform:scale(.9); opacity:0}}
+
+.rc-out-fade-leave{animation:rc-fade-out .25s ease-in forwards}
+.rc-out-slide-leave{animation:rc-slide-out .3s ease-in forwards}
+.rc-out-zoom-leave{animation:rc-zoom-out .25s ease-in forwards}
+.rc-out-bounce-leave{animation:rc-bounce-out .35s ease-in forwards}
+
+/* UI مدرن/Curve در ادمین */
+.ui-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);margin-bottom:16px}
+.rc-h{margin:0 0 8px;font-size:16px;font-weight:600}
+.rc-preview-img{max-width:100%;height:auto;display:block;margin-bottom:8px;border:1px solid #e5e7eb;border-radius:12px}
+.rc-utm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.rc-utm-grid label{display:flex;flex-direction:column;gap:6px}
+.rc-utm-actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.rc-utm-apply{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.rc-analytics-filters label{margin-right:8px}
+.rc-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.kpi{background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:12px;text-align:center}
+.kpi-title{font-size:12px;color:#64748b}
+.kpi-value{font-size:20px;font-weight:700;color:#0f172a}
+
+@media (max-width: 782px){.rc-utm-grid{grid-template-columns:1fr}.rc-kpis{grid-template-columns:1fr}}

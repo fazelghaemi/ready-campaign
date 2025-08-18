@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#f3f4f6"/>
+  <rect x="60" y="40" width="520" height="280" fill="#e5e7eb"/>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-family="sans-serif" font-size="20">Ready Campaign Placeholder</text>
+</svg>
