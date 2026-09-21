@@ -40,13 +40,15 @@ class RCP_Frontend {
         $q = new WP_Query([
             'post_type' => RCP_Post_Type::CPT,
             'posts_per_page' => -1,
-            'meta_key' => 'rc_active',
-            'meta_value' => 1,
             'post_status' => 'publish',
             'fields' => 'ids',
         ]);
 
-        $ids = $q->posts;
+        // Do not rely on one serialized representation of a boolean meta value.
+        // Older versions may have stored true/1/on differently.
+        $ids = array_values(array_filter($q->posts, function($id) {
+            return (bool)get_post_meta($id, 'rc_active', true);
+        }));
         if ($ttl) set_transient($cache_key, $ids, $ttl);
         return $ids;
     }
@@ -58,7 +60,7 @@ class RCP_Frontend {
         $start = get_post_meta($id,'rc_start',true);
         $end   = get_post_meta($id,'rc_end',true);
         $start_ts = $start ? self::local_datetime_to_timestamp($start) : 0;
-        $end_ts   = $end   ? self::local_datetime_to_timestamp($end)   : 0;
+        $end_ts   = $end   ? self::local_datetime_to_timestamp($end, true) : 0;
         if ($start_ts && $now < $start_ts) return false;
         if ($end_ts && $now > $end_ts) return false;
 
@@ -66,23 +68,25 @@ class RCP_Frontend {
         if (!in_array($dev,['both','desktop','mobile'])) $dev='both';
         if ($dev !== 'both' && $dev !== $device) return false;
 
-        $days = trim((string)get_post_meta($id,'rc_days',true));
-        if ($days !== '') {
-            $list = array_map('trim', explode(',', $days));
-            $dow = intval(wp_date('w', $now));
-            if (!in_array((string)$dow, $list, true)) return false;
+        $days = self::rule_values(get_post_meta($id,'rc_days',true));
+        if ($days) {
+            $list = array_values(array_filter($days, function($value) { return in_array($value, ['0','1','2','3','4','5','6'], true); }));
+            if ($list) {
+                $dow = intval(wp_date('w', $now));
+                if (!in_array((string)$dow, $list, true)) return false;
+            }
         }
         $hs = trim((string)get_post_meta($id,'rc_time_start',true));
         $he = trim((string)get_post_meta($id,'rc_time_end',true));
-        if ($hs !== '' && $he !== '') {
+        $start_min = self::time_to_minutes($hs);
+        $end_min = self::time_to_minutes($he);
+        if ($start_min !== null || $end_min !== null) {
             $hnow = intval(current_time('H'))*60 + intval(current_time('i'));
-            list($h1,$m1) = array_map('intval', explode(':', $hs));
-            list($h2,$m2) = array_map('intval', explode(':', $he));
-            $smin = $h1*60 + $m1; $emin = $h2*60 + $m2;
-            if ($smin <= $emin) {
-                if ($hnow < $smin || $hnow > $emin) return false;
+            if ($start_min !== null && $end_min !== null && $start_min > $end_min) {
+                if (!($hnow >= $start_min || $hnow <= $end_min)) return false;
             } else {
-                if (!($hnow >= $smin || $hnow <= $emin)) return false;
+                if ($start_min !== null && $hnow < $start_min) return false;
+                if ($end_min !== null && $hnow > $end_min) return false;
             }
         }
 
@@ -90,16 +94,14 @@ class RCP_Frontend {
         $inc = trim((string)get_post_meta($id,'rc_include_urls',true));
         if ($inc !== '') {
             $ok = false;
-            foreach (preg_split('/\r\n|\r|\n/', $inc) as $line) {
-                $line = trim($line);
+            foreach (self::rule_values($inc) as $line) {
                 if ($line && strpos($cur, $line) !== false) { $ok = true; break; }
             }
             if (!$ok) return false;
         }
         $exc = trim((string)get_post_meta($id,'rc_exclude_urls',true));
         if ($exc !== '') {
-            foreach (preg_split('/\r\n|\r|\n/', $exc) as $line) {
-                $line = trim($line);
+            foreach (self::rule_values($exc) as $line) {
                 if ($line && strpos($cur, $line) !== false) { return false; }
             }
         }
@@ -108,8 +110,7 @@ class RCP_Frontend {
         $refs = trim((string)get_post_meta($id,'rc_referrer_contains',true));
         if ($refs !== '') {
             $ok = false;
-            foreach (preg_split('/,|\r\n|\r|\n/', $refs) as $token) {
-                $token = trim($token);
+            foreach (self::rule_values($refs) as $token) {
                 if ($token && strpos($ref, $token) !== false) { $ok = true; break; }
             }
             if (!$ok) return false;
@@ -117,7 +118,7 @@ class RCP_Frontend {
 
         $req = trim((string)get_post_meta($id,'rc_require_utm_source',true));
         if ($req !== '') {
-            $allowed = array_map('trim', explode(',', $req));
+            $allowed = self::rule_values($req);
             $utm = isset($_GET['utm_source']) ? sanitize_text_field($_GET['utm_source']) : '';
             if (!in_array($utm, $allowed, true)) return false;
         }
@@ -125,10 +126,24 @@ class RCP_Frontend {
         return true;
     }
 
-    private static function local_datetime_to_timestamp($value) {
+    private static function rule_values($value) {
+        $value = trim((string)$value);
+        if ($value === '') return [];
+        $value = strtr($value, ['۰'=>'0','۱'=>'1','۲'=>'2','۳'=>'3','۴'=>'4','۵'=>'5','۶'=>'6','۷'=>'7','۸'=>'8','۹'=>'9']);
+        return array_values(array_filter(array_map('trim', preg_split('/[,،\r\n]+/u', $value))));
+    }
+
+    private static function time_to_minutes($value) {
+        if (!preg_match('/^(?:[01]?\d|2[0-3]):[0-5]\d$/', trim((string)$value))) return null;
+        list($hour, $minute) = array_map('intval', explode(':', $value));
+        return ($hour * 60) + $minute;
+    }
+
+    private static function local_datetime_to_timestamp($value, $end_of_day = false) {
         try {
             $timezone = wp_timezone();
             $date = new DateTime($value, $timezone);
+            if ($end_of_day && preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($value))) $date->setTime(23, 59, 59);
             return $date->getTimestamp();
         } catch (Exception $e) {
             return 0;

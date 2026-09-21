@@ -3,7 +3,7 @@ Contributors: readystudio
 Tags: banner, campaign, UTM, marketing, ads, analytics, targeting
 Requires at least: 5.8
 Tested up to: 6.6
-Stable tag: 1.2.5
+Stable tag: 1.2.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,11 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 ایمیل: info@readystudio.ir
 
 == تغییرات ==
+= 1.2.6 =
+* اصلاح نمایش بنر با خالی‌بودن گزینه‌های اختیاری.
+* اصلاح پشتیبانی از چند شرط با کاما یا خط جدید.
+* افزودن امکان پاک‌کردن سریع شرایط زمان‌بندی و هدف‌گیری.
+
 = 1.2.5 =
 * بازطراحی گردش کار با مرکز فرمان کمپین، مسیر پیشنهادی و اقدامات سریع.
 * ارتقای فهرست کمپین‌ها با وضعیت، دستگاه، زمان‌بندی و اقدام‌های مدیریتی.

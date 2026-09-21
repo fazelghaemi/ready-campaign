@@ -226,6 +226,7 @@
 .rc-editor-card { padding: 23px; }
 .rc-editor-card .rc-h { padding-bottom: 11px; margin: 5px 0 17px; border-bottom: 1px solid #edf1f5; color: var(--rc-ink); font-size: 16px; }
 .rc-editor-card .rc-h:not(:first-child) { margin-top: 28px; }
+.rc-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }.rc-section-heading .rc-h { flex: 1; }.rc-clear-rules { color: #a16054; font-size: 11px; text-decoration: none; }.rc-clear-rules:hover { color: #d95f47; }.rc-help-note { margin: -8px 0 16px; padding: 9px 11px; border-radius: 8px; background: #f0f8f8; color: #4b7774; font-size: 11px; line-height: 1.8; }.rc-optional { display: inline-block; margin-right: 4px; padding: 2px 6px; border-radius: 5px; background: #eef2f6; color: #8a99a9; font-size: 9px; font-weight: 600; }
 .rc-editor-card label { color: #334155; font-size: 12px; font-weight: 700; }
 .rc-editor-card .rc-row { margin: 0 0 17px; }
 .rc-editor-card input[type="text"], .rc-editor-card input[type="url"], .rc-editor-card input[type="number"], .rc-editor-card select, .rc-editor-card textarea {

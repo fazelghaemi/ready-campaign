@@ -12,6 +12,14 @@
   $(document).on('click', '.rc-device-tab', function(){ selectDevice($(this).data('device-tab')); });
   $(function(){ selectDevice('desktop'); });
 
+  $(document).on('click', '#rc_clear_rules', function(){
+    ['rc_start','rc_end','rc_days','rc_time_start','rc_time_end','rc_require_utm_source','rc_referrer_contains','rc_include_urls','rc_exclude_urls'].forEach(function(name){
+      $('[name="'+name+'"]').val('');
+    });
+    $(this).text('شرایط پاک شد');
+    setTimeout(function(){ $('#rc_clear_rules').text('پاک‌کردن شرایط'); }, 1400);
+  });
+
   // Media uploader
   $(document).on('click', '.rcp-media', function(e){
     e.preventDefault();

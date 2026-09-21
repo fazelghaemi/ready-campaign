@@ -157,14 +157,15 @@ class RCP_Admin {
                 <p class="rc-row rc-device-field rc-device-mobile"><label>لینک مقصد موبایل</label><br>
                     <input type="url" name="rc_link_mobile" value="<?php echo esc_url(self::field('rc_link_mobile', self::field('rc_link','',$id), $id)); ?>" class="widefat" placeholder="در صورت خالی بودن، لینک دسکتاپ استفاده می‌شود"></p>
 
-                <h2 class="rc-h">زمان‌بندی</h2>
-                <p class="rc-row"><label>شروع (Y-m-d H:i)</label><br>
+                <div class="rc-section-heading"><h2 class="rc-h">زمان‌بندی</h2><button type="button" class="button-link rc-clear-rules" id="rc_clear_rules">پاک‌کردن شرایط</button></div>
+                <p class="rc-help-note">همه گزینه‌های این بخش اختیاری هستند؛ اگر خالی بمانند، محدودیتی برای نمایش بنر اعمال نمی‌شود.</p>
+                <p class="rc-row"><label>شروع <span class="rc-optional">اختیاری</span> (Y-m-d H:i)</label><br>
                     <input type="text" name="rc_start" value="<?php echo $get('rc_start',''); ?>" placeholder="2025-08-18 08:00"></p>
-                <p class="rc-row"><label>پایان (Y-m-d H:i)</label><br>
+                <p class="rc-row"><label>پایان <span class="rc-optional">اختیاری</span> (Y-m-d H:i)</label><br>
                     <input type="text" name="rc_end" value="<?php echo $get('rc_end',''); ?>" placeholder="2025-09-01 23:59"></p>
-                <p class="rc-row"><label>روزهای هفته (0=Sun,...,6=Sat، مثل 0,1,2)</label><br>
+                <p class="rc-row"><label>روزهای هفته <span class="rc-optional">اختیاری</span> (0=Sun,...,6=Sat، مثل 0,1,2)</label><br>
                     <input type="text" name="rc_days" value="<?php echo $get('rc_days',''); ?>" placeholder="1,2,3,4,5"></p>
-                <p class="rc-row"><label>بازه ساعت (HH:MM)</label><br>
+                <p class="rc-row"><label>بازه ساعت <span class="rc-optional">اختیاری</span> (HH:MM)</label><br>
                     <input type="text" name="rc_time_start" value="<?php echo $get('rc_time_start',''); ?>" placeholder="09:00">
                     <input type="text" name="rc_time_end" value="<?php echo $get('rc_time_end',''); ?>" placeholder="22:00">
                 </p>
@@ -234,13 +235,14 @@ class RCP_Admin {
                 </p>
 
                 <h2 class="rc-h">منبع ورودی و آدرس</h2>
-                <p class="rc-row"><label>الزام UTM Source (لیست جدا با کاما)</label><br>
+                <p class="rc-help-note">این فیلترها نیز اختیاری هستند؛ خالی‌گذاشتن آن‌ها یعنی نمایش در همه صفحات و برای همه منابع.</p>
+                <p class="rc-row"><label>الزام UTM Source <span class="rc-optional">اختیاری</span> (لیست جدا با کاما)</label><br>
                     <input type="text" name="rc_require_utm_source" value="<?php echo $get('rc_require_utm_source',''); ?>" placeholder="google,instagram"></p>
-                <p class="rc-row"><label>Referrer باید شامل (کاما/خط جدید)</label><br>
+                <p class="rc-row"><label>Referrer باید شامل <span class="rc-optional">اختیاری</span> (کاما/خط جدید)</label><br>
                     <textarea name="rc_referrer_contains" rows="2" class="widefat" placeholder="facebook.com, telegram.me"><?php echo esc_textarea(self::field('rc_referrer_contains','',$id)); ?></textarea></p>
-                <p class="rc-row"><label>شامل URLها (هر خط یک عبارت)</label><br>
+                <p class="rc-row"><label>شامل URLها <span class="rc-optional">اختیاری</span> (هر خط یا کاما یک عبارت)</label><br>
                     <textarea name="rc_include_urls" rows="2" class="widefat" placeholder="/blog/, /sale"><?php echo esc_textarea(self::field('rc_include_urls','',$id)); ?></textarea></p>
-                <p class="rc-row"><label>حذف URLها (هر خط یک عبارت)</label><br>
+                <p class="rc-row"><label>حذف URLها <span class="rc-optional">اختیاری</span> (هر خط یا کاما یک عبارت)</label><br>
                     <textarea name="rc_exclude_urls" rows="2" class="widefat" placeholder="/checkout"><?php echo esc_textarea(self::field('rc_exclude_urls','',$id)); ?></textarea></p>
             </div>
         </div>
