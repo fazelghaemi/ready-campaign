@@ -26,7 +26,8 @@ class RCP_Frontend {
     }
 
     public static function now_ts() {
-        return current_time('timestamp');
+        // Keep a real Unix timestamp; wp_date() applies the site timezone below.
+        return current_time('timestamp', true);
     }
 
     private static function get_candidates_base() {
@@ -51,12 +52,13 @@ class RCP_Frontend {
     }
 
     private static function match_rules($id) {
+        if (!(int)get_post_meta($id, 'rc_image_desktop', true) && !(int)get_post_meta($id, 'rc_image_mobile', true)) return false;
         $now = self::now_ts();
         $device = wp_is_mobile() ? 'mobile' : 'desktop';
         $start = get_post_meta($id,'rc_start',true);
         $end   = get_post_meta($id,'rc_end',true);
-        $start_ts = $start ? strtotime($start) : 0;
-        $end_ts   = $end   ? strtotime($end)   : 0;
+        $start_ts = $start ? self::local_datetime_to_timestamp($start) : 0;
+        $end_ts   = $end   ? self::local_datetime_to_timestamp($end)   : 0;
         if ($start_ts && $now < $start_ts) return false;
         if ($end_ts && $now > $end_ts) return false;
 
@@ -67,7 +69,7 @@ class RCP_Frontend {
         $days = trim((string)get_post_meta($id,'rc_days',true));
         if ($days !== '') {
             $list = array_map('trim', explode(',', $days));
-            $dow = intval(gmdate('w', $now + (get_option('gmt_offset')*3600)));
+            $dow = intval(wp_date('w', $now));
             if (!in_array((string)$dow, $list, true)) return false;
         }
         $hs = trim((string)get_post_meta($id,'rc_time_start',true));
@@ -84,7 +86,7 @@ class RCP_Frontend {
             }
         }
 
-        $cur = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $cur = home_url(wp_unslash($_SERVER['REQUEST_URI'] ?? '/'));
         $inc = trim((string)get_post_meta($id,'rc_include_urls',true));
         if ($inc !== '') {
             $ok = false;
@@ -121,6 +123,21 @@ class RCP_Frontend {
         }
 
         return true;
+    }
+
+    private static function local_datetime_to_timestamp($value) {
+        try {
+            $timezone = wp_timezone();
+            $date = new DateTime($value, $timezone);
+            return $date->getTimestamp();
+        } catch (Exception $e) {
+            return 0;
+        }
+    }
+
+    private static function css_value($value, $default) {
+        $value = trim((string)$value);
+        return preg_match('/^(?:0|(?:\d+(?:\.\d+)?)(?:px|rem|em|vw|vh|%))$/', $value) ? $value : $default;
     }
 
     private static function get_candidates() {
@@ -160,16 +177,25 @@ class RCP_Frontend {
         $device = $device ?: (wp_is_mobile() ? 'mobile' : 'desktop');
 
         $pos     = get_post_meta($id,'rc_position',true) ?: 'br';
-        $width   = get_post_meta($id,'rc_width',true) ?: '320px';
-        $ox      = get_post_meta($id,'rc_offset_x',true) ?: '16px';
-        $oy      = get_post_meta($id,'rc_offset_y',true) ?: '16px';
-        $radius  = get_post_meta($id,'rc_radius',true) ?: '12px';
+        $width   = self::css_value(get_post_meta($id,'rc_width',true), '320px');
+        $ox      = self::css_value(get_post_meta($id,'rc_offset_x',true), '16px');
+        $oy      = self::css_value(get_post_meta($id,'rc_offset_y',true), '16px');
+        $radius  = self::css_value(get_post_meta($id,'rc_radius',true), '12px');
         $animIn  = get_post_meta($id,'rc_anim_in',true) ?: 'fade';
         $animOut = get_post_meta($id,'rc_anim_out',true) ?: 'fade';
-        $link    = get_post_meta($id,'rc_link',true) ?: '';
-        $img_id  = ($device==='mobile') ? (int)get_post_meta($id,'rc_image_mobile',true) : (int)get_post_meta($id,'rc_image_desktop',true);
+        $link_desktop = get_post_meta($id, 'rc_link_desktop', true) ?: get_post_meta($id,'rc_link',true);
+        $link_mobile = get_post_meta($id, 'rc_link_mobile', true) ?: $link_desktop;
+        $link = ($device === 'mobile') ? $link_mobile : $link_desktop;
+        $img_desktop_id = (int)get_post_meta($id,'rc_image_desktop',true);
+        $img_mobile_id  = (int)get_post_meta($id,'rc_image_mobile',true);
+        $img_id  = ($device==='mobile') ? ($img_mobile_id ?: $img_desktop_id) : ($img_desktop_id ?: $img_mobile_id);
 
         $img_url = $img_id ? wp_get_attachment_image_url($img_id, 'full') : RCP_ASSETS_URL . 'img/placeholder.svg';
+        if (!$img_url) $img_url = RCP_ASSETS_URL . 'img/placeholder.svg';
+        $mobile_url = $img_mobile_id ? wp_get_attachment_image_url($img_mobile_id, 'full') : $img_url;
+        $desktop_url = $img_desktop_id ? wp_get_attachment_image_url($img_desktop_id, 'full') : $mobile_url;
+        if (!$mobile_url) $mobile_url = $desktop_url;
+        if (!$desktop_url) $desktop_url = RCP_ASSETS_URL . 'img/placeholder.svg';
         $img_alt = esc_attr(get_the_title($id));
         $classes = 'rc-banner rc-pos-'.$pos.' rc-in-'.$animIn.' rc-out-'.$animOut;
         $style = sprintf('width:%s;border-radius:%s;--rc-ox:%s;--rc-oy:%s;', esc_attr($width), esc_attr($radius), esc_attr($ox), esc_attr($oy));
@@ -190,9 +216,11 @@ class RCP_Frontend {
              data-capday="<?php echo esc_attr($capDay); ?>"
              data-mutedays="<?php echo esc_attr($muteDays); ?>">
             <button class="rc-close" aria-label="Close">×</button>
-            <?php if ($link): ?><a class="rc-link" href="<?php echo esc_url($link); ?>" target="_blank" rel="noopener nofollow sponsored"><?php endif; ?>
-                <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/>
-            <?php if ($link): ?></a><?php endif; ?>
+            <?php if (!$device): ?>
+                <?php if ($link_desktop): ?><a class="rc-link rc-link-desktop" href="<?php echo esc_url($link_desktop); ?>" target="_blank" rel="noopener nofollow sponsored"><img src="<?php echo esc_url($desktop_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/></a><?php else: ?><img class="rc-link-desktop" src="<?php echo esc_url($desktop_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/><?php endif; ?>
+                <?php if ($link_mobile): ?><a class="rc-link rc-link-mobile" href="<?php echo esc_url($link_mobile); ?>" target="_blank" rel="noopener nofollow sponsored"><img src="<?php echo esc_url($mobile_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/></a><?php else: ?><img class="rc-link-mobile" src="<?php echo esc_url($mobile_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/><?php endif; ?>
+            <?php elseif ($link): ?><a class="rc-link" href="<?php echo esc_url($link); ?>" target="_blank" rel="noopener nofollow sponsored"><img src="<?php echo esc_url($img_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/></a>
+            <?php else: ?><img src="<?php echo esc_url($img_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/><?php endif; ?>
         </div>
         <?php
         return ob_get_clean();

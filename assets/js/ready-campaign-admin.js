@@ -1,4 +1,17 @@
 (function($){
+  // Device tabs keep desktop and mobile content focused without duplicating the form.
+  function selectDevice(device){
+    $('.rc-device-tab').each(function(){
+      var active = $(this).data('device-tab') === device;
+      $(this).toggleClass('is-active', active).attr('aria-selected', active ? 'true' : 'false');
+    });
+    $('.rc-device-field').each(function(){
+      $(this).toggleClass('is-hidden', !$(this).hasClass('rc-device-'+device));
+    });
+  }
+  $(document).on('click', '.rc-device-tab', function(){ selectDevice($(this).data('device-tab')); });
+  $(function(){ selectDevice('desktop'); });
+
   // Media uploader
   $(document).on('click', '.rcp-media', function(e){
     e.preventDefault();
@@ -18,7 +31,8 @@
   function build(){
     var base = $('#rc_base').val().trim();
     if(!base) return '';
-    var url = new URL(base, window.location.origin);
+    var url;
+    try { url = new URL(base, window.location.origin); } catch(e) { return ''; }
     var map = {
       utm_source:  $('#rc_source').val().trim(),
       utm_medium:  $('#rc_medium').val().trim(),
@@ -30,19 +44,28 @@
     Object.keys(map).forEach(function(k){ if(map[k]) url.searchParams.set(k, map[k]); });
     return url.toString();
   }
-  $('#rc_build').on('click', function(){ $('#rc_result').val(build()); });
-  $('#rc_copy').on('click', function(){
-    var $i = $('#rc_result'); $i[0].select(); document.execCommand('copy');
-    $(this).text('کپی شد ✓'); setTimeout(()=>$(this).text('کپی لینک'), 1200);
+  $('#rc_build').on('click', function(){
+    var result = build();
+    $('#rc_result').val(result);
+    if(!result) alert('لطفاً یک آدرس معتبر وارد کنید.');
   });
-  $('#rc_apply').on('click', function(){
+  $('#rc_copy').on('click', function(){
+    var value = $('#rc_result').val();
+    if(!value) return;
+    if(navigator.clipboard) navigator.clipboard.writeText(value);
+    else { var $i = $('#rc_result'); $i[0].select(); document.execCommand('copy'); }
+    $(this).text('کپی شد ✓'); setTimeout(function(){ $(this).text('کپی لینک'); }.bind(this), 1200);
+  });
+  function apply(device){
     var url = $('#rc_result').val().trim();
     var id  = $('#rc_banner').val();
     if(!url || !id){ alert('لینک و بنر را مشخص کنید'); return; }
-    $.post(RCAdmin.applyUrl, {nonce:RCAdmin.nonce, banner_id:id, url:url}, function(res){
+    $.post(RCAdmin.applyUrl, {nonce:RCAdmin.nonce, banner_id:id, url:url, device:device}, function(res){
       alert(res && res.success ? 'لینک روی بنر اعمال شد' : 'خطا در اعمال لینک');
     });
-  });
+  }
+  $('#rc_apply_desktop').on('click', function(){ apply('desktop'); });
+  $('#rc_apply_mobile').on('click', function(){ apply('mobile'); });
 
   // Live Preview bindings
   function updatePreview(){

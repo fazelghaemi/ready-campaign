@@ -38,15 +38,31 @@ class RCP_Settings {
     }
 
     public static function register() {
-        register_setting(self::OPTION, self::OPTION);
+        register_setting(self::OPTION, self::OPTION, [
+            'sanitize_callback' => [__CLASS__, 'sanitize'],
+        ]);
+    }
+
+    public static function sanitize($input) {
+        $defaults = self::defaults();
+        $out = $defaults;
+        foreach (['safe_top', 'safe_bottom', 'safe_left', 'safe_right'] as $key) {
+            $value = isset($input[$key]) ? sanitize_text_field($input[$key]) : $defaults[$key];
+            $out[$key] = preg_match('/^(?:0|(?:\d+(?:\.\d+)?)(?:px|rem|em|vw|vh|%))$/', trim($value)) ? trim($value) : $defaults[$key];
+        }
+        $out['max_per_request'] = min(10, max(1, isset($input['max_per_request']) ? (int)$input['max_per_request'] : $defaults['max_per_request']));
+        $out['cache_ttl'] = max(0, isset($input['cache_ttl']) ? (int)$input['cache_ttl'] : $defaults['cache_ttl']);
+        $out['retention_days'] = max(30, isset($input['retention_days']) ? (int)$input['retention_days'] : $defaults['retention_days']);
+        delete_transient('rc_candidates_base');
+        return $out;
     }
 
     public static function render() {
         if (!current_user_can('manage_options')) return;
         $opt = self::get();
         ?>
-        <div class="wrap">
-            <h1><?php _e('Display & Performance Settings', 'ready-campaign'); ?></h1>
+        <div class="wrap rc-admin-shell rc-settings-page">
+            <div class="rc-page-heading"><div><span class="rc-eyebrow">READY CAMPAIGN · SYSTEM</span><h1><?php _e('Display & Performance Settings', 'ready-campaign'); ?></h1><p><?php _e('Safe areas, caching and reporting retention for your campaigns.', 'ready-campaign'); ?></p></div><span class="rc-heading-mark" aria-hidden="true">◌</span></div>
             <form method="post" action="options.php" class="ui-card">
                 <?php settings_fields(self::OPTION); ?>
                 <table class="form-table">

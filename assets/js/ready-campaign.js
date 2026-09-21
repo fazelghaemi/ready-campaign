@@ -120,10 +120,9 @@
       });
     }
 
-    var link = b.querySelector('a.rc-link');
-    if(link){
+    b.querySelectorAll('a.rc-link').forEach(function(link){
       link.addEventListener('click', function(){ send('click', id); });
-    }
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function(){

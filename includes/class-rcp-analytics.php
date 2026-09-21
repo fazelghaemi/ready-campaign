@@ -108,8 +108,8 @@ class RCP_Analytics {
         $imps = intval($totals['imps']); $clicks=intval($totals['clicks']);
         $ctr = $imps ? round(($clicks/$imps)*100, 2) : 0;
         ?>
-        <div class="wrap">
-            <h1><?php _e('Analytics', 'ready-campaign'); ?></h1>
+        <div class="wrap rc-admin-shell rc-analytics-page">
+            <div class="rc-page-heading"><div><span class="rc-eyebrow">READY CAMPAIGN · SIGNALS</span><h1><?php _e('Analytics', 'ready-campaign'); ?></h1><p><?php _e('Understand which banners earn attention and clicks.', 'ready-campaign'); ?></p></div><span class="rc-heading-mark" aria-hidden="true">↗</span></div>
             <form method="get" class="rc-analytics-filters ui-card">
                 <input type="hidden" name="post_type" value="<?php echo RCP_Post_Type::CPT; ?>">
                 <input type="hidden" name="page" value="rc-analytics">

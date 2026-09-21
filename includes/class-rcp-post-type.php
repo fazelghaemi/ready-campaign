@@ -38,6 +38,8 @@ class RCP_Post_Type {
             'rc_image_desktop' => ['type' => 'integer', 'default' => 0],
             'rc_image_mobile'  => ['type' => 'integer', 'default' => 0],
             'rc_link'          => ['type' => 'string',  'default' => ''],
+            'rc_link_desktop'  => ['type' => 'string',  'default' => ''],
+            'rc_link_mobile'   => ['type' => 'string',  'default' => ''],
 
             'rc_start' => ['type' => 'string', 'default' => ''],
             'rc_end'   => ['type' => 'string', 'default' => ''],
