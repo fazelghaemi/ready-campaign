@@ -3,7 +3,7 @@ Contributors: readystudio
 Tags: banner, campaign, UTM, marketing, ads, analytics, targeting
 Requires at least: 5.8
 Tested up to: 6.6
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,11 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 ایمیل: info@readystudio.ir
 
 == تغییرات ==
+= 1.2.5 =
+* بازطراحی گردش کار با مرکز فرمان کمپین، مسیر پیشنهادی و اقدامات سریع.
+* ارتقای فهرست کمپین‌ها با وضعیت، دستگاه، زمان‌بندی و اقدام‌های مدیریتی.
+* ایجاد یک سیستم طراحی یکپارچه برای تمام صفحات مدیریت.
+
 = 1.2.4 =
 * ترجمه کامل رابط مدیریت و پیام‌های افزونه به فارسی.
 * بازسازی فایل‌های ترجمه PO و MO برای زبان fa_IR.

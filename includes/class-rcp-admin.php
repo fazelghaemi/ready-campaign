@@ -8,6 +8,9 @@ class RCP_Admin {
 
         add_action('admin_enqueue_scripts', [__CLASS__, 'admin_assets']);
         add_action('admin_menu', [__CLASS__, 'utm_builder_page']);
+        add_action('admin_menu', [__CLASS__, 'dashboard_page'], 5);
+        add_filter('manage_edit-' . RCP_Post_Type::CPT . '_columns', [__CLASS__, 'columns']);
+        add_action('manage_' . RCP_Post_Type::CPT . '_posts_custom_column', [__CLASS__, 'column_content'], 10, 2);
 
         add_action('wp_ajax_rc_apply_utm_to_banner', [__CLASS__, 'ajax_apply_utm']);
     }
@@ -26,6 +29,90 @@ class RCP_Admin {
 
     public static function add_metaboxes() {
         add_meta_box('rc_banner_settings', __('Banner Settings', 'ready-campaign'), [__CLASS__, 'metabox_render'], RCP_Post_Type::CPT, 'normal', 'high');
+    }
+
+    public static function dashboard_page() {
+        add_submenu_page(
+            'edit.php?post_type=' . RCP_Post_Type::CPT,
+            __('Campaign Center', 'ready-campaign'),
+            __('Campaign Center', 'ready-campaign'),
+            'edit_posts',
+            'rc-campaign-center',
+            [__CLASS__, 'dashboard_render']
+        );
+    }
+
+    public static function columns($columns) {
+        return [
+            'cb' => isset($columns['cb']) ? $columns['cb'] : '<input type="checkbox" />',
+            'title' => __('Campaign name', 'ready-campaign'),
+            'rc_status' => __('Status', 'ready-campaign'),
+            'rc_devices' => __('Devices', 'ready-campaign'),
+            'rc_schedule' => __('Schedule', 'ready-campaign'),
+            'date' => __('Created', 'ready-campaign'),
+        ];
+    }
+
+    public static function column_content($column, $post_id) {
+        if ($column === 'rc_status') {
+            $status = self::campaign_status($post_id);
+            echo '<span class="rc-status rc-status-' . esc_attr($status['key']) . '"><i></i>' . esc_html($status['label']) . '</span>';
+        } elseif ($column === 'rc_devices') {
+            $device = get_post_meta($post_id, 'rc_device', true) ?: 'both';
+            $labels = ['both' => 'دسکتاپ + موبایل', 'desktop' => 'دسکتاپ', 'mobile' => 'موبایل'];
+            echo '<span class="rc-device-pill">' . esc_html($labels[$device] ?? $labels['both']) . '</span>';
+        } elseif ($column === 'rc_schedule') {
+            $start = get_post_meta($post_id, 'rc_start', true);
+            $end = get_post_meta($post_id, 'rc_end', true);
+            if (!$start && !$end) echo '<span class="rc-muted">همیشه</span>';
+            else echo '<span class="rc-schedule">' . esc_html($start ?: 'بدون شروع') . '<br><small>' . esc_html($end ?: 'بدون پایان') . '</small></span>';
+        }
+    }
+
+    private static function campaign_status($post_id) {
+        if (get_post_status($post_id) !== 'publish') return ['key' => 'draft', 'label' => 'پیش‌نویس'];
+        if (!get_post_meta($post_id, 'rc_active', true)) return ['key' => 'paused', 'label' => 'متوقف'];
+        $now = current_time('timestamp', true);
+        $start = get_post_meta($post_id, 'rc_start', true);
+        $end = get_post_meta($post_id, 'rc_end', true);
+        $to_ts = function($value) { try { return (new DateTime($value, wp_timezone()))->getTimestamp(); } catch (Exception $e) { return 0; } };
+        if ($start && ($ts = $to_ts($start)) && $now < $ts) return ['key' => 'scheduled', 'label' => 'زمان‌بندی‌شده'];
+        if ($end && ($ts = $to_ts($end)) && $now > $ts) return ['key' => 'ended', 'label' => 'پایان‌یافته'];
+        return ['key' => 'live', 'label' => 'در حال اجرا'];
+    }
+
+    public static function dashboard_render() {
+        if (!current_user_can('edit_posts')) return;
+        $posts = get_posts(['post_type' => RCP_Post_Type::CPT, 'post_status' => 'any', 'numberposts' => 8, 'orderby' => 'date', 'order' => 'DESC']);
+        $all = get_posts(['post_type' => RCP_Post_Type::CPT, 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids']);
+        $stats = ['total' => count($all), 'live' => 0, 'scheduled' => 0, 'draft' => 0];
+        foreach ($all as $id) { $s = self::campaign_status($id); if (isset($stats[$s['key']])) $stats[$s['key']]++; }
+        $new_url = admin_url('post-new.php?post_type=' . RCP_Post_Type::CPT);
+        $utm_url = admin_url('edit.php?post_type=' . RCP_Post_Type::CPT . '&page=rc-utm-builder');
+        $analytics_url = admin_url('edit.php?post_type=' . RCP_Post_Type::CPT . '&page=rc-analytics');
+        ?>
+        <div class="wrap rc-admin-shell rc-center-page">
+            <section class="rc-center-hero">
+                <div class="rc-center-hero__copy"><span class="rc-eyebrow">READY CAMPAIGN · CONTROL ROOM</span><h1>مرکز فرمان کمپین</h1><p>از ساخت بنر تا اندازه‌گیری نتیجه، همه‌چیز را از یک مسیر روشن مدیریت کنید.</p><a class="button rc-cta" href="<?php echo esc_url($new_url); ?>">+ ساخت کمپین جدید</a></div>
+                <div class="rc-center-orbit" aria-hidden="true"><span class="rc-orbit-dot dot-one"></span><span class="rc-orbit-dot dot-two"></span><span class="rc-orbit-core">RC</span></div>
+            </section>
+            <section class="rc-center-stats" aria-label="خلاصه کمپین‌ها">
+                <div class="rc-center-stat"><span>همه کمپین‌ها</span><strong><?php echo number_format_i18n($stats['total']); ?></strong><small>ثبت‌شده در افزونه</small></div>
+                <div class="rc-center-stat is-live"><span>در حال اجرا</span><strong><?php echo number_format_i18n($stats['live']); ?></strong><small>در حال نمایش به کاربران</small></div>
+                <div class="rc-center-stat is-scheduled"><span>زمان‌بندی‌شده</span><strong><?php echo number_format_i18n($stats['scheduled']); ?></strong><small>آماده انتشار</small></div>
+                <div class="rc-center-stat is-draft"><span>پیش‌نویس</span><strong><?php echo number_format_i18n($stats['draft']); ?></strong><small>نیازمند تکمیل</small></div>
+            </section>
+            <div class="rc-center-grid">
+                <section class="ui-card rc-workflow-card"><div class="rc-card-heading"><div><span class="rc-card-kicker">مسیر پیشنهادی</span><h2>از ایده تا نتیجه</h2></div><span class="rc-card-icon">✦</span></div>
+                    <div class="rc-workflow"><div class="rc-workflow-step is-done"><b>۰۱</b><div><strong>کمپین را تعریف کنید</strong><span>نام، تصویر و هدف کمپین را مشخص کنید.</span></div><i>✓</i></div><div class="rc-workflow-step"><b>۰۲</b><div><strong>لینک قابل‌اندازه‌گیری بسازید</strong><span>پارامترهای UTM را تکمیل کنید.</span></div><a href="<?php echo esc_url($utm_url); ?>">باز کردن</a></div><div class="rc-workflow-step"><b>۰۳</b><div><strong>نمایش را زمان‌بندی کنید</strong><span>دستگاه، موقعیت و زمان نمایش را تنظیم کنید.</span></div><span class="rc-step-note">در ویرایشگر</span></div><div class="rc-workflow-step"><b>۰۴</b><div><strong>نتیجه را بسنجید</strong><span>نمایش‌ها، کلیک‌ها و نرخ کلیک را بررسی کنید.</span></div><a href="<?php echo esc_url($analytics_url); ?>">گزارش‌ها</a></div></div>
+                </section>
+                <section class="ui-card rc-next-card"><span class="rc-card-kicker">شروع سریع</span><h2>قدم بعدی شما چیست؟</h2><p>یک مسیر را انتخاب کنید و کار را ادامه دهید.</p><a class="rc-next-action" href="<?php echo esc_url($new_url); ?>"><span>＋</span><div><strong>ساخت بنر جدید</strong><small>برای یک کمپین تازه</small></div><b>←</b></a><a class="rc-next-action" href="<?php echo esc_url($utm_url); ?>"><span>↗</span><div><strong>ساخت لینک UTM</strong><small>برای ردیابی دقیق‌تر</small></div><b>←</b></a></section>
+            </div>
+            <section class="ui-card rc-recent-card"><div class="rc-card-heading"><div><span class="rc-card-kicker">آخرین فعالیت</span><h2>کمپین‌های اخیر</h2></div><a href="<?php echo esc_url(admin_url('edit.php?post_type=' . RCP_Post_Type::CPT)); ?>">مشاهده همه ←</a></div>
+                <?php if ($posts): ?><div class="rc-recent-list"><?php foreach ($posts as $post): $s = self::campaign_status($post->ID); ?><a class="rc-recent-row" href="<?php echo esc_url(get_edit_post_link($post->ID)); ?>"><span class="rc-recent-avatar"><?php echo esc_html(mb_strtoupper(mb_substr($post->post_title ?: 'ب', 0, 1))); ?></span><span class="rc-recent-name"><strong><?php echo esc_html($post->post_title ?: 'بدون عنوان'); ?></strong><small><?php echo esc_html(get_the_date('', $post)); ?></small></span><span class="rc-status rc-status-<?php echo esc_attr($s['key']); ?>"><i></i><?php echo esc_html($s['label']); ?></span><span class="rc-recent-arrow">←</span></a><?php endforeach; ?></div><?php else: ?><div class="rc-empty-state"><span>✦</span><strong>هنوز کمپینی ساخته نشده است</strong><p>اولین کمپین خود را بسازید و مسیر نمایش آن را کنترل کنید.</p><a class="button rc-cta" href="<?php echo esc_url($new_url); ?>">ساخت اولین کمپین</a></div><?php endif; ?>
+            </section>
+        </div>
+        <?php
     }
 
     public static function field($name, $default='', $post_id=0) {

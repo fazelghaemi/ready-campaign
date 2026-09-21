@@ -1,7 +1,7 @@
 # Persian (Iran) translation for Ready Campaign
 msgid ""
 msgstr ""
-"Project-Id-Version: Ready Campaign 1.2.4\n"
+"Project-Id-Version: Ready Campaign 1.2.5\n"
 "Report-Msgid-Bugs-To: https://readystudio.ir/\n"
 "POT-Creation-Date: 2026-09-21 00:00+0330\n"
 "PO-Revision-Date: 2026-09-21 00:00+0330\n"
@@ -72,3 +72,21 @@ msgstr "ببینید کدام بنرها بیشترین توجه و کلیک ر�
 
 msgid "UTM Builder"
 msgstr "لینک‌ساز کمپین"
+
+msgid "Campaign Center"
+msgstr "مرکز کمپین"
+
+msgid "Campaign name"
+msgstr "نام کمپین"
+
+msgid "Status"
+msgstr "وضعیت"
+
+msgid "Devices"
+msgstr "دستگاه‌ها"
+
+msgid "Schedule"
+msgstr "زمان‌بندی"
+
+msgid "Created"
+msgstr "تاریخ ایجاد"

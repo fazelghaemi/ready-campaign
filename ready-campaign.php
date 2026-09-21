@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ردی کمپین | Ready Campaign
  * Description: مدیریت پیشرفته بنرهای تبلیغاتی + لینک‌ساز UTM + آنالیتیکس داخلی، زمان‌بندی و قوانین نمایش، پیش‌نمایش زنده و UI مدرن.
- * Version: 1.2.4
+ * Version: 1.2.5
  * Author: Ready Studio | Fazel Ghaemi
  * Author URI: https://readystudio.ir/
  * Text Domain: ready-campaign
@@ -12,7 +12,7 @@
 if (!defined('ABSPATH')) { exit; }
 
 // Use unique constants to avoid collisions with older/other variants
-if (!defined('RCP_VERSION')) define('RCP_VERSION', '1.2.4');
+if (!defined('RCP_VERSION')) define('RCP_VERSION', '1.2.5');
 if (!defined('RCP_FILE'))    define('RCP_FILE', __FILE__);
 if (!defined('RCP_PATH'))    define('RCP_PATH', plugin_dir_path(__FILE__));
 if (!defined('RCP_URL'))     define('RCP_URL', plugin_dir_url(__FILE__));
