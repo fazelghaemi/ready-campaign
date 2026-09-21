@@ -1,4 +1,5 @@
 (function(){
+  document.documentElement.classList.add('rc-js');
   function sess() {
     try {
       var k='rc_sess';

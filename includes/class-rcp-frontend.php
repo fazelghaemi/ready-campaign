@@ -3,11 +3,46 @@ if (!defined('ABSPATH')) { exit; }
 
 class RCP_Frontend {
     private static $candidates = null;
+    private static $rendered = false;
 
     public static function init() {
         add_action('wp_enqueue_scripts', [__CLASS__, 'assets']);
+        add_action('wp_body_open', [__CLASS__, 'render_banners'], 100);
         add_action('wp_footer', [__CLASS__, 'render_banners'], 100);
+        add_action('template_redirect', [__CLASS__, 'start_fallback_buffer'], 0);
         add_shortcode('ready_campaign', [__CLASS__, 'shortcode']);
+    }
+
+    public static function start_fallback_buffer() {
+        if (is_admin() || wp_doing_ajax() || is_feed() || is_robots() || is_trackback()) return;
+        ob_start([__CLASS__, 'inject_fallback_output']);
+    }
+
+    public static function inject_fallback_output($html) {
+        if (self::$rendered || stripos($html, 'rc-root') !== false) return $html;
+        ob_start();
+        self::render_banners();
+        $banner = ob_get_clean();
+        if (!$banner) return $html;
+
+        // Themes without wp_head/wp_footer still receive the required assets.
+        $css_url = RCP_ASSETS_URL . 'css/ready-campaign.css?ver=' . rawurlencode(RCP_VERSION);
+        $js_url = RCP_ASSETS_URL . 'js/ready-campaign.js?ver=' . rawurlencode(RCP_VERSION);
+        $settings = RCP_Settings::get();
+        $vars = 'window.RCVars=' . wp_json_encode([
+            'ajax' => admin_url('admin-ajax.php'),
+            'safe' => [
+                'top' => $settings['safe_top'], 'right' => $settings['safe_right'],
+                'bottom' => $settings['safe_bottom'], 'left' => $settings['safe_left'],
+            ],
+        ]) . ';';
+        $assets = '';
+        if (stripos($html, 'ready-campaign.css') === false) $assets .= '<link rel="stylesheet" id="ready-campaign-fallback-css" href="' . esc_url($css_url) . '" media="all" />';
+        if (stripos($html, 'ready-campaign.js') === false) $assets .= '<script>' . $vars . '</script><script id="ready-campaign-fallback-js" src="' . esc_url($js_url) . '"></script>';
+        $output = $assets . $banner;
+        $body_pos = strripos($html, '</body>');
+        if ($body_pos !== false) return substr($html, 0, $body_pos) . $output . substr($html, $body_pos);
+        return $html . $output;
     }
 
     public static function assets() {
@@ -189,6 +224,7 @@ class RCP_Frontend {
 
     private static function render_banner_html($id, $device = null) {
         if (!$id) return '';
+        $requested_device = $device;
         $device = $device ?: (wp_is_mobile() ? 'mobile' : 'desktop');
 
         $pos     = get_post_meta($id,'rc_position',true) ?: 'br';
@@ -231,7 +267,7 @@ class RCP_Frontend {
              data-capday="<?php echo esc_attr($capDay); ?>"
              data-mutedays="<?php echo esc_attr($muteDays); ?>">
             <button class="rc-close" aria-label="بستن بنر">×</button>
-            <?php if (!$device): ?>
+            <?php if ($requested_device === null): ?>
                 <?php if ($link_desktop): ?><a class="rc-link rc-link-desktop" href="<?php echo esc_url($link_desktop); ?>" target="_blank" rel="noopener nofollow sponsored"><img src="<?php echo esc_url($desktop_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/></a><?php else: ?><img class="rc-link-desktop" src="<?php echo esc_url($desktop_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/><?php endif; ?>
                 <?php if ($link_mobile): ?><a class="rc-link rc-link-mobile" href="<?php echo esc_url($link_mobile); ?>" target="_blank" rel="noopener nofollow sponsored"><img src="<?php echo esc_url($mobile_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/></a><?php else: ?><img class="rc-link-mobile" src="<?php echo esc_url($mobile_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/><?php endif; ?>
             <?php elseif ($link): ?><a class="rc-link" href="<?php echo esc_url($link); ?>" target="_blank" rel="noopener nofollow sponsored"><img src="<?php echo esc_url($img_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/></a>
@@ -242,6 +278,8 @@ class RCP_Frontend {
     }
 
     public static function render_banners() {
+        if (self::$rendered) return;
+        self::$rendered = true;
         $opt = RCP_Settings::get();
         $ids = self::get_candidates();
         if (empty($ids)) return;

@@ -180,6 +180,9 @@
 @media (prefers-reduced-motion: reduce) {
     .rc-banner { animation-duration: .01ms !important; transition: none !important; }
 }
+/* A banner remains visible when a theme blocks JavaScript execution. */
+.rc-banner { opacity: 1; pointer-events: auto; }
+.rc-js .rc-banner { opacity: 0; pointer-events: none; }
 
 /* Admin utility cards and UTM builder */
 .ui-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin: 16px 0; }
