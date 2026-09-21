@@ -3,7 +3,7 @@ Contributors: readystudio
 Tags: banner, campaign, UTM, marketing, ads, analytics, targeting
 Requires at least: 5.8
 Tested up to: 6.6
-Stable tag: 1.2.7
+Stable tag: 1.2.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,10 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 ایمیل: info@readystudio.ir
 
 == تغییرات ==
+= 1.2.8 =
+* افزودن Seed مرکزی برای ذخیره مقادیر پیش‌فرض تنظیمات هر بنر.
+* پرشدن خودکار فاصله‌ها، اندازه، انحنا، موقعیت، وزن و انیمیشن در بنرهای جدید.
+
 = 1.2.7 =
 * اصلاح نهایی نمایش فرانت‌اند در قالب‌های قدیمی و قالب‌هایی که هوک‌های استاندارد را ناقص اجرا می‌کنند.
 * افزودن fallback برای تزریق بنر و assetهای لازم در خروجی صفحه.

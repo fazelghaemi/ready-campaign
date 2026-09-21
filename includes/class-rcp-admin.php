@@ -123,6 +123,7 @@ class RCP_Admin {
     public static function metabox_render($post) {
         wp_nonce_field('rc_save_meta', 'rc_nonce');
         $id = $post->ID;
+        RCP_Post_Type::seed_banner_defaults($id);
 
         $get = function($k,$d='') use ($id){ return esc_attr(self::field($k,$d,$id)); };
         $geti= function($k,$d=0) use ($id){ return (int)self::field($k,$d,$id); };
@@ -266,6 +267,7 @@ class RCP_Admin {
         if (!isset($_POST['rc_nonce']) || !wp_verify_nonce($_POST['rc_nonce'], 'rc_save_meta')) return;
         if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
         if (!current_user_can('edit_post', $post_id)) return;
+        RCP_Post_Type::seed_banner_defaults($post_id);
 
         $b = function($k){ return isset($_POST[$k]) ? (bool)$_POST[$k] : false; };
         $s = function($k,$def=''){ return isset($_POST[$k]) ? sanitize_text_field($_POST[$k]) : $def; };

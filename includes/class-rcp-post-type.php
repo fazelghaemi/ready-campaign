@@ -4,6 +4,31 @@ if (!defined('ABSPATH')) { exit; }
 class RCP_Post_Type {
     const CPT = 'rc_banner';
 
+    public static function banner_defaults() {
+        return [
+            'rc_active' => false, 'rc_device' => 'both',
+            'rc_image_desktop' => 0, 'rc_image_mobile' => 0,
+            'rc_link' => '', 'rc_link_desktop' => '', 'rc_link_mobile' => '',
+            'rc_start' => '', 'rc_end' => '', 'rc_days' => '',
+            'rc_time_start' => '', 'rc_time_end' => '',
+            'rc_position' => 'br', 'rc_width' => '320px',
+            'rc_offset_x' => '16px', 'rc_offset_y' => '16px',
+            'rc_radius' => '12px', 'rc_weight' => 1,
+            'rc_include_urls' => '', 'rc_exclude_urls' => '',
+            'rc_referrer_contains' => '', 'rc_require_utm_source' => '',
+            'rc_cap_user_day' => 0, 'rc_mute_days' => 0, 'rc_delay_ms' => 0,
+            'rc_scroll_percent' => 0, 'rc_exit_intent' => false,
+            'rc_anim_in' => 'fade', 'rc_anim_out' => 'fade',
+        ];
+    }
+
+    public static function seed_banner_defaults($post_id) {
+        if (!$post_id || get_post_type($post_id) !== self::CPT) return;
+        foreach (self::banner_defaults() as $key => $value) {
+            if (!metadata_exists('post', $post_id, $key)) add_post_meta($post_id, $key, $value, true);
+        }
+    }
+
     public static function init() {
         add_action('init', [__CLASS__, 'register_post_type']);
         add_action('init', [__CLASS__, 'register_meta']);
