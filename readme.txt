@@ -1,29 +1,36 @@
-=== Ready Campaign Pro ===
+=== ردی کمپین | Ready Campaign ===
 Contributors: readystudio
 Tags: banner, campaign, UTM, marketing, ads, analytics, targeting
 Requires at least: 5.8
 Tested up to: 6.6
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Ready Campaign Pro is a professional banner manager + UTM link builder with built-in analytics, scheduling, targeting and modern admin UI.
+ردی کمپین افزونه‌ای فارسی برای مدیریت بنرهای تبلیغاتی، ساخت لینک‌های UTM، زمان‌بندی، هدف‌گیری و گزارش‌گیری کمپین‌ها در وردپرس است.
 
-== Important ==
-- This build uses unique constants (RCP_*) and class names (RCP_*) to avoid collisions with older "Ready Campaign" plugins.
+== امکانات ==
+* نمایش تصویر و لینک جداگانه برای دسکتاپ و موبایل
+* مدیریت موقعیت، اندازه، انحنا و انیمیشن بنر
+* زمان‌بندی و محدودکردن نمایش بنر
+* هدف‌گیری بر اساس URL، ارجاع‌دهنده و UTM Source
+* لینک‌ساز کمپین با پشتیبانی از پارامترهای استاندارد UTM
+* اعمال مستقیم لینک ساخته‌شده روی بنر دسکتاپ یا موبایل
+* گزارش نمایش، کلیک و نرخ کلیک
+* رابط کاربری فارسی و واکنش‌گرا
 
-== Changelog ==
-= 1.2.1 =
-* Fix: unique constants to prevent collisions (RCP_*).
-* Fix: PHP parse error in weighted pick loop.
-* Fix: admin media button selector; placeholder paths.
-* Other: same features as 1.2.0 with robustness improvements.
+== پشتیبانی ==
+وب‌سایت: https://readystudio.ir/
+ایمیل: info@readystudio.ir
 
-= 1.2.2 =
-* Fix: responsive desktop/mobile banner images and separate destination links.
-* Fix: UTM Builder can apply links to desktop or mobile banners.
-* Fix: front-end banner styles, input validation, date/time handling and cache invalidation.
+== تغییرات ==
+= 1.2.4 =
+* ترجمه کامل رابط مدیریت و پیام‌های افزونه به فارسی.
+* بازسازی فایل‌های ترجمه PO و MO برای زبان fa_IR.
 
 = 1.2.3 =
-* UI: redesigned admin editor, UTM Builder, settings and analytics screens.
-* UI: added device tabs, responsive cards, live preview polish and accessible focus states.
+* بازطراحی رابط مدیریت، لینک‌ساز UTM، تنظیمات و گزارش‌ها.
+* افزودن تب‌های دستگاهی، پیش‌نمایش زنده و حالت‌های دسترسی‌پذیر.
+
+= 1.2.2 =
+* اصلاح نمایش واکنش‌گرای بنرها و لینک‌های جداگانه دسکتاپ و موبایل.

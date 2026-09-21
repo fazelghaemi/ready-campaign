@@ -215,7 +215,7 @@ class RCP_Frontend {
              data-exit="<?php echo esc_attr($exitInt); ?>"
              data-capday="<?php echo esc_attr($capDay); ?>"
              data-mutedays="<?php echo esc_attr($muteDays); ?>">
-            <button class="rc-close" aria-label="Close">×</button>
+            <button class="rc-close" aria-label="بستن بنر">×</button>
             <?php if (!$device): ?>
                 <?php if ($link_desktop): ?><a class="rc-link rc-link-desktop" href="<?php echo esc_url($link_desktop); ?>" target="_blank" rel="noopener nofollow sponsored"><img src="<?php echo esc_url($desktop_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/></a><?php else: ?><img class="rc-link-desktop" src="<?php echo esc_url($desktop_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/><?php endif; ?>
                 <?php if ($link_mobile): ?><a class="rc-link rc-link-mobile" href="<?php echo esc_url($link_mobile); ?>" target="_blank" rel="noopener nofollow sponsored"><img src="<?php echo esc_url($mobile_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/></a><?php else: ?><img class="rc-link-mobile" src="<?php echo esc_url($mobile_url); ?>" alt="<?php echo $img_alt; ?>" loading="lazy"/><?php endif; ?>

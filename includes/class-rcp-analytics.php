@@ -113,21 +113,21 @@ class RCP_Analytics {
             <form method="get" class="rc-analytics-filters ui-card">
                 <input type="hidden" name="post_type" value="<?php echo RCP_Post_Type::CPT; ?>">
                 <input type="hidden" name="page" value="rc-analytics">
-                <label>From <input type="date" name="from" value="<?php echo esc_attr($from); ?>"></label>
-                <label>To <input type="date" name="to" value="<?php echo esc_attr($to); ?>"></label>
+                <label>از <input type="date" name="from" value="<?php echo esc_attr($from); ?>"></label>
+                <label>تا <input type="date" name="to" value="<?php echo esc_attr($to); ?>"></label>
                 <button class="button button-primary">اعمال</button>
                 <a class="button" href="<?php echo esc_url(admin_url('admin-post.php?action=rc_export_csv&from='.$from.'&to='.$to)); ?>">خروجی CSV</a>
             </form>
 
             <div class="ui-card rc-kpis">
-                <div class="kpi"><div class="kpi-title">Impressions</div><div class="kpi-value"><?php echo number_format_i18n($imps); ?></div></div>
-                <div class="kpi"><div class="kpi-title">Clicks</div><div class="kpi-value"><?php echo number_format_i18n($clicks); ?></div></div>
-                <div class="kpi"><div class="kpi-title">CTR</div><div class="kpi-value"><?php echo esc_html($ctr); ?>%</div></div>
+                <div class="kpi"><div class="kpi-title">نمایش‌ها</div><div class="kpi-value"><?php echo number_format_i18n($imps); ?></div></div>
+                <div class="kpi"><div class="kpi-title">کلیک‌ها</div><div class="kpi-value"><?php echo number_format_i18n($clicks); ?></div></div>
+                <div class="kpi"><div class="kpi-title">نرخ کلیک</div><div class="kpi-value"><?php echo esc_html($ctr); ?>٪</div></div>
             </div>
 
             <div class="ui-card">
                 <table class="widefat striped">
-                    <thead><tr><th>Banner</th><th>Imps</th><th>Clicks</th><th>CTR</th></tr></thead>
+                    <thead><tr><th>بنر</th><th>نمایش</th><th>کلیک</th><th>نرخ کلیک</th></tr></thead>
                     <tbody>
                         <?php if ($rows) :
                             foreach($rows as $r):

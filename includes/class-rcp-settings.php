@@ -68,10 +68,10 @@ class RCP_Settings {
                 <table class="form-table">
                     <tr><th><?php _e('Safe Areas', 'ready-campaign'); ?></th>
                         <td>
-                            <label>Top <input type="text" name="<?php echo esc_attr(self::OPTION); ?>[safe_top]" value="<?php echo esc_attr($opt['safe_top']); ?>" placeholder="0px"></label>
-                            <label>Right <input type="text" name="<?php echo esc_attr(self::OPTION); ?>[safe_right]" value="<?php echo esc_attr($opt['safe_right']); ?>" placeholder="0px"></label>
-                            <label>Bottom <input type="text" name="<?php echo esc_attr(self::OPTION); ?>[safe_bottom]" value="<?php echo esc_attr($opt['safe_bottom']); ?>" placeholder="0px"></label>
-                            <label>Left <input type="text" name="<?php echo esc_attr(self::OPTION); ?>[safe_left]" value="<?php echo esc_attr($opt['safe_left']); ?>" placeholder="0px"></label>
+                            <label>بالا <input type="text" name="<?php echo esc_attr(self::OPTION); ?>[safe_top]" value="<?php echo esc_attr($opt['safe_top']); ?>" placeholder="0px"></label>
+                            <label>راست <input type="text" name="<?php echo esc_attr(self::OPTION); ?>[safe_right]" value="<?php echo esc_attr($opt['safe_right']); ?>" placeholder="0px"></label>
+                            <label>پایین <input type="text" name="<?php echo esc_attr(self::OPTION); ?>[safe_bottom]" value="<?php echo esc_attr($opt['safe_bottom']); ?>" placeholder="0px"></label>
+                            <label>چپ <input type="text" name="<?php echo esc_attr(self::OPTION); ?>[safe_left]" value="<?php echo esc_attr($opt['safe_left']); ?>" placeholder="0px"></label>
                             <p class="description"><?php _e('Prevents overlap with cookie bars, chat widgets, etc.', 'ready-campaign'); ?></p>
                         </td>
                     </tr>

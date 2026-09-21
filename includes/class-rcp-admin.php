@@ -131,18 +131,18 @@ class RCP_Admin {
                     <input type="text" name="rc_radius" value="<?php echo $get('rc_radius','12px'); ?>" placeholder="12px"></p>
                 <p class="rc-row"><label>انیمیشن ورود</label><br>
                     <select name="rc_anim_in">
-                        <option value="fade" <?php selected($get('rc_anim_in','fade'),'fade');?>>Fade</option>
-                        <option value="slide" <?php selected($get('rc_anim_in','fade'),'slide');?>>Slide</option>
-                        <option value="zoom" <?php selected($get('rc_anim_in','fade'),'zoom');?>>Zoom</option>
-                        <option value="bounce" <?php selected($get('rc_anim_in','fade'),'bounce');?>>Bounce</option>
+                        <option value="fade" <?php selected($get('rc_anim_in','fade'),'fade');?>>محو شدن</option>
+                        <option value="slide" <?php selected($get('rc_anim_in','fade'),'slide');?>>لغزش</option>
+                        <option value="zoom" <?php selected($get('rc_anim_in','fade'),'zoom');?>>بزرگ‌نمایی</option>
+                        <option value="bounce" <?php selected($get('rc_anim_in','fade'),'bounce');?>>جهش</option>
                     </select>
                 </p>
                 <p class="rc-row"><label>انیمیشن خروج</label><br>
                     <select name="rc_anim_out">
-                        <option value="fade" <?php selected($get('rc_anim_out','fade'),'fade');?>>Fade</option>
-                        <option value="slide" <?php selected($get('rc_anim_out','fade'),'slide');?>>Slide</option>
-                        <option value="zoom" <?php selected($get('rc_anim_out','fade'),'zoom');?>>Zoom</option>
-                        <option value="bounce" <?php selected($get('rc_anim_out','fade'),'bounce');?>>Bounce</option>
+                        <option value="fade" <?php selected($get('rc_anim_out','fade'),'fade');?>>محو شدن</option>
+                        <option value="slide" <?php selected($get('rc_anim_out','fade'),'slide');?>>لغزش</option>
+                        <option value="zoom" <?php selected($get('rc_anim_out','fade'),'zoom');?>>بزرگ‌نمایی</option>
+                        <option value="bounce" <?php selected($get('rc_anim_out','fade'),'bounce');?>>جهش</option>
                     </select>
                 </p>
 
@@ -254,7 +254,7 @@ class RCP_Admin {
     </div>
     <div class="rc-utm ui-card">
         <div class="rc-utm-grid">
-            <label>Base URL
+            <label>آدرس پایه
                 <input type="url" id="rc_base" placeholder="https://example.com/">
             </label>
             <label>utm_source <input type="text" id="rc_source" placeholder="google"></label>
@@ -266,7 +266,7 @@ class RCP_Admin {
         </div>
         <div class="rc-utm-actions">
             <button type="button" class="button button-primary" id="rc_build">ساخت لینک</button>
-            <input type="text" id="rc_result" readonly placeholder="Result URL will appear here" class="widefat">
+            <input type="text" id="rc_result" readonly placeholder="لینک نهایی اینجا نمایش داده می‌شود" class="widefat">
             <button type="button" class="button" id="rc_copy">کپی لینک</button>
         </div>
         <hr>

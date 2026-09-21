@@ -245,7 +245,7 @@
 .rc-live { overflow: hidden; padding: 0; background: #17243e; color: #fff; }
 .rc-live .rc-h { margin: 0; padding: 17px 21px; color: #fff; font-size: 15px; }
 .rc-live #rc_live_stage { min-height: 230px; position: relative; overflow: hidden; padding: 35px; background: radial-gradient(circle at 85% 20%, rgba(239,118,92,.23), transparent 33%), linear-gradient(135deg, #203252, #0d172d); }
-.rc-live #rc_live_stage::after { content: "LIVE PREVIEW"; position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,.42); font-size: 9px; font-weight: 800; letter-spacing: 1.5px; direction: ltr; }
+.rc-live #rc_live_stage::after { content: "پیش‌نمایش زنده"; position: absolute; top: 14px; left: 16px; color: rgba(255,255,255,.42); font-size: 9px; font-weight: 800; letter-spacing: 1.5px; }
 .rc-live #rc_live_stage .rc-banner { position: absolute; max-width: 300px; }
 .rc-live > .description { margin: 0; padding: 12px 21px 16px; color: rgba(255,255,255,.65); font-size: 11px; line-height: 1.8; }
 .rc-page-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 24px 0 18px; padding: 25px 28px; border-radius: 18px; background: linear-gradient(120deg, #172742, #1d3b51); color: #fff; box-shadow: var(--rc-shadow); }

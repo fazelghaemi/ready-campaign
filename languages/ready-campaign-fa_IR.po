@@ -1,157 +1,74 @@
 # Persian (Iran) translation for Ready Campaign
-# Copyright (C) 2024 Fazel Ghaemi
-# This file is distributed under the same license as the Ready Campaign package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Ready Campaign 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ready-campaign\n"
-"POT-Creation-Date: 2024-05-20 12:30+0330\n"
-"PO-Revision-Date: 2025-08-18 19:41+0330\n"
-"Last-Translator: Gemini <>\n"
-"Language-Team: Persian\n"
+"Project-Id-Version: Ready Campaign 1.2.4\n"
+"Report-Msgid-Bugs-To: https://readystudio.ir/\n"
+"POT-Creation-Date: 2026-09-21 00:00+0330\n"
+"PO-Revision-Date: 2026-09-21 00:00+0330\n"
+"Last-Translator: Ready Studio\n"
+"Language-Team: فارسی\n"
 "Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.6\n"
 
-#: includes/admin/class-ready-campaign-admin.php:45
 msgid "Ready Campaign"
-msgstr "کمپین آماده"
+msgstr "ردی کمپین"
 
-#: includes/admin/class-ready-campaign-admin.php:46
-#: includes/admin/views/settings-page.php:4
-msgid "Settings"
-msgstr "تنظیمات"
+msgid "Campaign Banners"
+msgstr "بنرهای کمپین"
 
-#: includes/admin/class-ready-campaign-admin.php:143
-msgid "Send Test SMS"
-msgstr "ارسال پیامک تست"
+msgid "Campaign Banner"
+msgstr "بنر کمپین"
 
-#: includes/admin/views/settings-page.php:8
-msgid "General Settings"
-msgstr "تنظیمات عمومی"
+msgid "Add New Banner"
+msgstr "افزودن بنر جدید"
 
-#: includes/admin/views/settings-page.php:13
-msgid "API Key"
-msgstr "کلید API"
+msgid "Add New Campaign Banner"
+msgstr "افزودن بنر کمپین جدید"
 
-#: includes/admin/views/settings-page.php:15
-msgid "Enter your API key"
-msgstr "کلید API خود را وارد کنید"
+msgid "Edit Campaign Banner"
+msgstr "ویرایش بنر کمپین"
 
-#: includes/admin/views/settings-page.php:20
-msgid "Sender Number"
-msgstr "شماره فرستنده"
+msgid "New Campaign Banner"
+msgstr "بنر کمپین جدید"
 
-#: includes/admin/views/settings-page.php:22
-msgid "Enter your sender number"
-msgstr "شماره فرستنده خود را وارد کنید"
+msgid "Banners"
+msgstr "بنرها"
 
-#: includes/admin/views/settings-page.php:27
-msgid "Campaign Settings"
-msgstr "تنظیمات کمپین"
+msgid "Banner Settings"
+msgstr "تنظیمات بنر"
 
-#: includes/admin/views/settings-page.php:32
-msgid "Campaign Name"
-msgstr "نام کمپین"
+msgid "Display Settings"
+msgstr "تنظیمات نمایش"
 
-#: includes/admin/views/settings-page.php:34
-msgid "Enter the campaign name"
-msgstr "نام کمپین را وارد کنید"
+msgid "Display & Performance Settings"
+msgstr "تنظیمات نمایش و عملکرد"
 
-#: includes/admin/views/settings-page.php:39
-msgid "Campaign Content"
-msgstr "محتوای کمپین"
+msgid "Safe Areas"
+msgstr "فاصله‌های ایمن"
 
-#: includes/admin/views/settings-page.php:41
-msgid "Enter the campaign content"
-msgstr "محتوای کمپین را وارد کنید"
+msgid "Prevents overlap with cookie bars, chat widgets, etc."
+msgstr "از تداخل بنر با نوار کوکی، ابزار گفت‌وگو و موارد مشابه جلوگیری می‌کند."
 
-#: includes/admin/views/settings-page.php:57
-msgid "Test To"
-msgstr "ارسال تست به"
+msgid "Max Banners Per Page"
+msgstr "حداکثر بنر در هر صفحه"
 
-#: includes/admin/views/settings-page.php:59
-msgid "Enter recipient's number"
-msgstr "شماره گیرنده را وارد کنید"
+msgid "Candidates Cache TTL (sec)"
+msgstr "مدت کش فهرست بنرها (ثانیه)"
 
-#: includes/admin/views/settings-page.php:62
-msgid "Send"
-msgstr "ارسال"
+msgid "Analytics Retention (days)"
+msgstr "مدت نگهداری گزارش‌ها (روز)"
 
-#: includes/class-ready-campaign-cpt.php:22
-#: includes/class-ready-campaign-cpt.php:23
-msgid "Campaigns"
-msgstr "کمپین‌ها"
+msgid "Older rows may be purged to keep DB small."
+msgstr "برای کاهش حجم پایگاه داده، داده‌های قدیمی ممکن است حذف شوند."
 
-#: includes/class-ready-campaign-cpt.php:24
-msgid "All Campaigns"
-msgstr "همه کمپین‌ها"
+msgid "Analytics"
+msgstr "گزارش‌ها"
 
-#: includes/class-ready-campaign-cpt.php:25
-msgid "Add New"
-msgstr "افزودن جدید"
+msgid "Understand which banners earn attention and clicks."
+msgstr "ببینید کدام بنرها بیشترین توجه و کلیک را دریافت می‌کنند."
 
-#: includes/class-ready-campaign-cpt.php:26
-msgid "Add New Campaign"
-msgstr "افزودن کمپین جدید"
-
-#: includes/class-ready-campaign-cpt.php:27
-msgid "Edit Campaign"
-msgstr "ویرایش کمپین"
-
-#: includes/class-ready-campaign-cpt.php:28
-msgid "New Campaign"
-msgstr "کمپین جدید"
-
-#: includes/class-ready-campaign-cpt.php:29
-msgid "View Campaign"
-msgstr "مشاهده کمپین"
-
-#: includes/class-ready-campaign-cpt.php:30
-msgid "Search Campaigns"
-msgstr "جستجوی کمپین‌ها"
-
-#: includes/class-ready-campaign-cpt.php:31
-msgid "No campaigns found."
-msgstr "هیچ کمپینی یافت نشد."
-
-#: includes/class-ready-campaign-cpt.php:32
-msgid "No campaigns found in Trash."
-msgstr "هیچ کمپینی در زباله‌دان یافت نشد."
-
-#: includes/class-ready-campaign-cpt.php:62
-msgid "Name"
-msgstr "نام"
-
-#: includes/class-ready-campaign-cpt.php:63
-msgid "Content"
-msgstr "محتوا"
-
-#: includes/class-ready-campaign-cpt.php:64
-msgid "Date"
-msgstr "تاریخ"
-
-#: ready-campaign.php:79
-msgid "Ready Campaign Settings"
-msgstr "تنظیمات کمپین آماده"
-
-#: ready-campaign.php:123
-msgid "Your settings have been saved."
-msgstr "تنظیمات شما ذخیره شد."
-
-#: ready-campaign.php:143
-msgid "Are you sure you want to send a test SMS?"
-msgstr "آیا از ارسال پیامک تست مطمئن هستید؟"
-
-#: ready-campaign.php:156
-msgid "Test SMS sent successfully!"
-msgstr "پیامک تست با موفقیت ارسال شد!"
-
-#: ready-campaign.php:160
-msgid "Failed to send test SMS."
-msgstr "ارسال پیامک تست ناموفق بود."
+msgid "UTM Builder"
+msgstr "لینک‌ساز کمپین"
